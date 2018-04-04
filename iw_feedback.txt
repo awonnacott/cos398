@@ -1,0 +1,6 @@
+* Be clearer about exactly what steps to use to biuld and run the simulation
+* A lot of variation based on what other bots are in the room: what is good performance?
+-clarify: should be simluating against additoinal startegies
+-not against just itself (test agaisnt previous iterations of itself as well)
+-***be clearer about who you wlil be evaluated against***
+*define 'bot' = object = instance of the 'strategy' (class) [dont use undefined words in pdf]
