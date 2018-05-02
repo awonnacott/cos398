@@ -1,3 +1,6 @@
 "these are the concepts I want to teach the person"
 such as "how to encode data structures in logical formulas" (noah)
 focus on learning goals "the types of queries that are effecive at data abstraction and when different techniques are applicable" (tigermenus: three techniques in data collection: scraping, api, data file)
+
+focus on answered questions: explain what problem you are going to solve
+why did I decide for/against things

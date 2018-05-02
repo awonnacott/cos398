@@ -1,0 +1,110 @@
+\documentclass[pageno]{jpaper}
+
+\newcommand{\IWreport}{2016}
+\newcommand{\quotes}[1]{``#1''}
+
+
+\widowpenalty=9999
+
+\usepackage[normalem]{ulem}
+
+\begin{document}
+
+\title{
+A Latex Template for Independent Work Reports\\
+Version 2016v3}
+
+\author{Firstname Lastname\\Adviser: Firstname Lastname}
+
+\date{}
+\maketitle
+
+\thispagestyle{empty}
+\doublespacing
+\begin{abstract}
+This document is intended to serve as a sample you can use for independent work reports.  We provide some guidelines on content and formatting.  They are not required, but they might be helpful.
+\end{abstract}
+
+
+Teaching Algorithmic Game Theory with Programming Competitions
+Andrew Wonnacott
+COS 398 IW 09 (Professor Walker)
+Abstract
+Framing: Developing A Modular Framework for Developing, Deploying, and Evaluating programming Assignments in a theory course
+Introduction 1.5
+goal (1st par) - helping improve the quality of theory eduction for broader cs majors - what will I contribute?
+motivation - currently there is a lot of work repeated every year, and with very little knowledge preserved (institutional memory), which takes up CS dept resources. Lots of tasks could be automated. Personal motivation: enjoyed the course, especially these assignments
+Problem Background / related work - past years, harvard, 4.5
+Related work: this course has had programming assignments for years
+Related work: 126/226 have automated all of this for years
+Related work: Harvard also has AGT PA games (nobody else does)
+approach - big picture? 3 <- [1-8]
+Design of my solution, how it differs
+Introduce present / future split
+Design and implementation of assignments / design and implementation of frameworks for implementing assignments
+product component overview
+- iterate, provide resources
+Implementation - details important to achieving goal. Keys to success. How+why 10
+ - language choice
+sharing code between tesitng / leaderboard / submit / grader (focus on modularity)
+Sharing code between programming assignments to make new assignment development easier
+Evaluation 5.5
+results - current use in 445
+Use next year in 445
+Performance evaluation by user studies
+Student reviews
+Grader reviews (myself, Matt)
+Conclusions 1.25
+What will I have to do next year that I didn’t have to do this year?
+What will I have to repeat next year?
+What would I need to tell someone so they would know how ot do this?
+future work - next year
+Bibliography
+Collaboration with Matt to co-write the programming assignment specs I would be following during ‘present’ work
+Note I was paid for some of my time grading (included copying grades around when I hadn’t finished some of the formatting in the autograder, but not developing the autograder)
+acknowledgements - thanks matt, cyril, dave, other students in my seminar, students in course, UCAs and grad students
+
+
+
+Introduction    
+Professor Weinberg’s COS 445 (Economics and Computing) taught Spring 2017 was one of the most popular theory classes this department has ever taught. Despite its classification as a ‘theory’ distribution, the course contains several programming challenges. In these assignments, students to apply theoretical results on iterated games and auctions to design and implement strategies which play iterated games or participate in auctions. The submissions are then tested against each other and against instructor strategies. Student feedback emphasized the role of the programming exercises in the popularity of the course. However, only two of the eight problem sets contained programming exercises in Spring 2017, and course instructors expressed interest in having a similar exercise in each problem set. The goal of my project is to develop new assignments in the same form which develop theoretical understanding of other topics covered in algorithmic game theory, to expand the resources available to students completing these assignments, and to improve the tooling used by instructors for grading student submissions for these assignments. 
+Problem Background and Related Work
+This work will be heavily based on the two programming exercises most recently maintained by Cyril Zhang in Spring 2017, described above, which I completed while enrolled in this course in that semester. These assignments, as with those I develop, are written in Java, as dictated by the prerequisites of the course. Similar assignments have been developed for Harvard’s course by the same title, in which students develop a BitTorrent simulation and auction bidding agents in Python. However, a brief survey of courses in algorithmic game theory at other universities, including Stanford, Cornell, U. Washington, Yale, Penn, Georgia Tech, Carnegie Mellon, Duke, found no other results.
+    Because of the urgent need for an assistant who can program and maintain the existing programming challenges for the current semester, Professor Weinberg and I decided to use the developed assignments directly as a component of the Spring 2018 instance of COS 445. Thus, I have a unique opportunity to organize my independent work around live student feedback, which will be incorporated into the development of later assignments.
+    Potential assignment topics include college admissions (using stable matchings), elections, and blockchain incentives. The design of the assignments and instructor solutions will be done under supervision and lead of Professor Weinberg: we will both brainstorm potential assignments, and then select for implementation the one we think best engages students. I will be primarily responsible for developing the software interfaces for students to design against, the instructor tooling for quantitative and qualitative evaluation of student submissions, and the student tooling for simulating and testing their assignments. The student tooling will allow students to test their programs in assignments which simulate the real evaluation environment. I will also be providing support to students who are completing the assignments and organizing the usage of the instructor evaluation tools. If time permits, I would like to develop an online leaderboard connected to the CS Dropbox to allow students to compare their submissions against each other in real time before the submission deadline.
+Evaluation
+I will request feedback from current students about their overall satisfaction with the programming assignments as compared to additional theoretical problems (which are still the assignment backbone), their usage of my tools, and their general suggestions, to improve subsequent assignments. I will also request feedback from Professor Weinberg and the undergraduate graders of the course regarding how to provide better instructor-side tooling for the assignments. My success will be valuable through students’ self-perceived ability to focus on the core assignment content without experiencing undue difficulties with the assignment structure and through instructors’ present and future usage of the developed  assignments. Qualitative measures of success include elements of survey results described above, decrease in illegal (i.e. errors unrelated to course content) programs submitted as measured by anonymized metrics such as lower-outlier rates in quantitative simulation performance of student submissions, and decrease in instructor resources (e.g. time) required to maintain and grade the assignments. These data can be compared to similar data from the two similar exercises assigned in previous years.
+Big mistake in ‘present’ - bad at communicating how students would be graded
+In the first three weeks of the semester, I have already developed, implemented, and deployed two assignments, and have developed all of the tools necessary for grading submissions. I am currently collecting the completed tools into one automated script which will be able to produce collated student results and to aggregate results into graphics for presentation. Preliminary data suggests that rate of illegal submissions has dropped dramatically with the availability to students of improved testing software.
+
+
+Framing:
+-design assignments vs building assignment infrastructure
+- present vs future
+-’do it, do it right, do it again’ (modularity, extensibility, reusability)
+-Components: student testing script, dropbox testing script, leaderboard script, grader script, sample strategies, instructor strategies. 4/6 reuasable
+How are the programming assignments graded? Why were we not informed of how they would be graded for the first two problem sets?
+Here is a link to the grading policies sheet for programming assignments: GradesForProgramming.pdf. This document was in the General Resources section of the Piazza resources page, referred to from the programming assignment description for both problem sets (although the reference was confusing). Survey results indicate that we didn't properly advertise it and most students were not aware of its existence. Thus, a lot of students were surprised that the objective questions and the strength of the writeup were the dominant factors in their grades --- not the performance of their software. Given that we did a poor job making this clear, we'll be altering how these two assignments are included in your final grade. See @394 for details.
+What is the role of programming in a theory course?
+Survey results indicate at least a few students are confused why they need to program in a theory course. One key difference between COS 445 (being a theoretical computer science course on game theory) and ECO 418, MAT 378, or POL 347 (other game theory courses offered at Princeton) is that we place some emphasis on the connections between game-theoretic results and algorithms, software, and other aspects of computer science. One way in which we do this is by asking students to connect their learning in this course to their learning in prerequisite courses, in this case COS 226. Past course feedback was overwhelmingly positive for programming challenges (so the hope is that the initial negative feedback this cycle is due more to poor administration)
+Here's what we didn't make clear: the "programming assignments" aren't really about your ability to code. They are about placing the theoretical results from the course in context. They create a scenario in which mastery of theoretical results from the course content is demonstrated by making and justifying real-world decisions. However (and we didn't communicate this well), we are still grading your response to the programming exercises as a theory problem. That is why 2/3 of the credit on the "programming exercises" goes to the theoretical questions, and why poor performance of your software strategy (so long as it does not crash) can be entirely offset by a well-written writeup. So, in actuality, 0% of your grade is solely dependent on your programming ability --- as is appropriate in a theory course! We include the empirical performance of your strategy in a way that can only benefit your grade in the course, to reward students who demonstrated mastery of the course content by designing a great strategy even if they did not describe it perfectly
+Why do we have to use Java (not Python)?
+We would love to do these assignments in Python, as many students requested, but unfortunately we do not have Python experience as a course prerequisite and are firmly of the conviction that it is inappropriate for a course to expect students to learn a programming language they have never seen before with no formal instruction (no matter how many other courses do that).
+Additionally, empirical data from other course surveys suggests that 90% of students report themselves fluent in Java after the Princeton introductory sequence, compared to 30% for python.
+Why are my strategies graded against instructor strategies instead of against the strategies of my peers?
+We do not believe it is right to grade students against their peers' submissions because academic performance should not be a zero-sum game. This was overwhelmingly requested by last year's class.
+
+
+\section{Ethics}
+
+Your independent work report should abide by the basic standards of scholarly ethics and by the Princeton Honor Code. If you have any doubts about how to cite
+other work, how to quote or include text or images from other works, or other issues, please discuss them with your project adviser or with the IW coordinators. 
+
+
+
+\bstctlcite{bstctl:etal, bstctl:nodash, bstctl:simpurl}
+\bibliographystyle{IEEEtranS}
+\bibliography{references}
+
+\end{document}
+
