@@ -1,8 +1,8 @@
 \documentclass[pageno]{jpaper}
 
-\newcommand{\IWreport}{2016}
+\newcommand{\Semester}{Spring}
+\newcommand{\IWreport}{2018}
 \newcommand{\quotes}[1]{``#1''}
-
 
 \widowpenalty=9999
 
@@ -11,100 +11,90 @@
 \begin{document}
 
 \title{
-A Latex Template for Independent Work Reports\\
-Version 2016v3}
+A Modular Framework for Developing, Deploying, and Evaluating Game-Theoretic Strategy Design Exercises}
 
-\author{Firstname Lastname\\Adviser: Firstname Lastname}
+\author{Andrew Wonnacott\\
+  Advisers: Professor Dave Walker, Professor Matt Weinberg}
 
 \date{}
 \maketitle
 
 \thispagestyle{empty}
-\doublespacing
+\doublespacing{}
 \begin{abstract}
-This document is intended to serve as a sample you can use for independent work reports.  We provide some guidelines on content and formatting.  They are not required, but they might be helpful.
+  Student interest in Princeton's undergraduate course in algorithmic game theory, ``Economics and Computing'' (COS 445), has grown rapidly in recent years.
+  This course employs small simulations to develop students' ability to use theoretical tools to analyze more real-world situations.
+  These strategy design exercises require considerably more software infrastructure than would a usual theoretical problem set, including handout code for student self-evaluation and software autograders.
+  While some frameworks for automated grading exist, none surveyed provided the specific features desired for repeatedly developing very similarly structured assignments and evaluating student submissions in the context of each other.
+  In order to facilitate more automated grading of these assignments in this and future semesters, I have developed a framework of modular, extensible tools for building all of the necessary compoenents oif these strategy design assignments.
+  Concurrently, in my role as a grader for COS 445, I used the framework to develop and evaluate four strategy design assignments, using assignment specifications developed with Professor Weinberg.
+  This provides feedback from real student and instructor users which was used to improve the design.
+  Empirical results demonstrate the importance of quality tooling to effective use of instructor time, low broken submission rates, and high student satisfaction.
 \end{abstract}
 
+\newpage
+\section*{Introduction}
+\begin{itemize}
+\item Discussion of strategy design assignments on cos445sp1[78] with specific examples (from this year + PD)
+\item Mention how they are graded (not zero-sum)
+\item While these assignments were popular with students\footnote{https://reg-captiva.princeton.edu/chart/index.php?terminfo=1184\&courseinfo=012095 requires CAS login}, they also demanded considerable instructor resources be dedicated to building and grading software resoruces. Additionally, due to the limited tooling provided for students to evaluate their submissions, many submissions did not compile or caused runtime exceptions, requiring considerable additional instructor resources.
+\end{itemize}
 
-Teaching Algorithmic Game Theory with Programming Competitions
-Andrew Wonnacott
-COS 398 IW 09 (Professor Walker)
-Abstract
-Framing: Developing A Modular Framework for Developing, Deploying, and Evaluating programming Assignments in a theory course
-Introduction 1.5
-goal (1st par) - helping improve the quality of theory eduction for broader cs majors - what will I contribute?
-motivation - currently there is a lot of work repeated every year, and with very little knowledge preserved (institutional memory), which takes up CS dept resources. Lots of tasks could be automated. Personal motivation: enjoyed the course, especially these assignments
-Problem Background / related work - past years, harvard, 4.5
-Related work: this course has had programming assignments for years
-Related work: 126/226 have automated all of this for years
-Related work: Harvard also has AGT PA games (nobody else does)
-approach - big picture? 3 <- [1-8]
-Design of my solution, how it differs
-Introduce present / future split
-Design and implementation of assignments / design and implementation of frameworks for implementing assignments
-product component overview
-- iterate, provide resources
-Implementation - details important to achieving goal. Keys to success. How+why 10
- - language choice
-sharing code between tesitng / leaderboard / submit / grader (focus on modularity)
-Sharing code between programming assignments to make new assignment development easier
-Evaluation 5.5
-results - current use in 445
-Use next year in 445
-Performance evaluation by user studies
-Student reviews
-Grader reviews (myself, Matt)
-Conclusions 1.25
-What will I have to do next year that I didn’t have to do this year?
-What will I have to repeat next year?
-What would I need to tell someone so they would know how ot do this?
-future work - next year
-Bibliography
-Collaboration with Matt to co-write the programming assignment specs I would be following during ‘present’ work
-Note I was paid for some of my time grading (included copying grades around when I hadn’t finished some of the formatting in the autograder, but not developing the autograder)
-acknowledgements - thanks matt, cyril, dave, other students in my seminar, students in course, UCAs and grad students
+\section*{Related Work}
+This work was developed to replace previous software design exercises assigned to COS 445 students\footnote{including the author} in Spring 2017.\footnote{https://web.archive.org/web/20170916042726/https://www.cs.princeton.edu/~smattw/Teaching/cos445sp17.htm}
+In one problem set, students developed and implemented strategies for three different strategy design exercises, related to three different classical games: Prisoner's Dilemma, Centipede, and Ultimatum.
+In a later problem set, an exercise placed students in the role of bidders in a generalized second-price auction.\footnote{an auction of multiple items, one after another, where the winning bid pays the second highest bid. This is the auction format used by Google to sell sponsored search auctions.}
 
+Both problem sets were implemented and graded by Cyril Zhang\footnote{https://github.com/cyrilzhang}, a graduate student TA for the course.
+Cyril developed interfaces, dummy implementations, and grader software for each strategy design exercise.\footnote{https://github.com/PrincetonUniversity/cos445-hw/tree/s17 requires invite: contact author or department}
+However, this existing implementation of grader software for strategy design assignments is not modular and has to be completely rewritten for each assignment, and was designed for grader use only.
+The student interfaces were documented, but the grader software was not documented for future re-use.
+Additionally, some of the scripts and notebooks used by Cyril were not preserved and were not accessible as resources.
+Thus, while these resources served as inspiration for this work and provided some assignment-specific code to my work developing specific assignments, I did not build directly on Cyril's code.
 
+Previous to Spring 2017, COS 445 was taught by Professor Mark Braverman in Fall 2012 and Spring 2014\footnote{https://precourser.io/course/1184012095 requires Princeton CAS authentication}.
+Though no documentation or archives of the course homepage from these semesters is available online or in the Internet Archive, I recovered some resources from the course account on the ``Cycles'' cluster of the Princeton Computer Science department and from the source code respositories used by the course staff.
+In both semesters, Yonatan Naamad\footnote{https://github.com/ynaamad/} was responsible for software development.
 
-Introduction    
-Professor Weinberg’s COS 445 (Economics and Computing) taught Spring 2017 was one of the most popular theory classes this department has ever taught. Despite its classification as a ‘theory’ distribution, the course contains several programming challenges. In these assignments, students to apply theoretical results on iterated games and auctions to design and implement strategies which play iterated games or participate in auctions. The submissions are then tested against each other and against instructor strategies. Student feedback emphasized the role of the programming exercises in the popularity of the course. However, only two of the eight problem sets contained programming exercises in Spring 2017, and course instructors expressed interest in having a similar exercise in each problem set. The goal of my project is to develop new assignments in the same form which develop theoretical understanding of other topics covered in algorithmic game theory, to expand the resources available to students completing these assignments, and to improve the tooling used by instructors for grading student submissions for these assignments. 
-Problem Background and Related Work
-This work will be heavily based on the two programming exercises most recently maintained by Cyril Zhang in Spring 2017, described above, which I completed while enrolled in this course in that semester. These assignments, as with those I develop, are written in Java, as dictated by the prerequisites of the course. Similar assignments have been developed for Harvard’s course by the same title, in which students develop a BitTorrent simulation and auction bidding agents in Python. However, a brief survey of courses in algorithmic game theory at other universities, including Stanford, Cornell, U. Washington, Yale, Penn, Georgia Tech, Carnegie Mellon, Duke, found no other results.
-    Because of the urgent need for an assistant who can program and maintain the existing programming challenges for the current semester, Professor Weinberg and I decided to use the developed assignments directly as a component of the Spring 2018 instance of COS 445. Thus, I have a unique opportunity to organize my independent work around live student feedback, which will be incorporated into the development of later assignments.
-    Potential assignment topics include college admissions (using stable matchings), elections, and blockchain incentives. The design of the assignments and instructor solutions will be done under supervision and lead of Professor Weinberg: we will both brainstorm potential assignments, and then select for implementation the one we think best engages students. I will be primarily responsible for developing the software interfaces for students to design against, the instructor tooling for quantitative and qualitative evaluation of student submissions, and the student tooling for simulating and testing their assignments. The student tooling will allow students to test their programs in assignments which simulate the real evaluation environment. I will also be providing support to students who are completing the assignments and organizing the usage of the instructor evaluation tools. If time permits, I would like to develop an online leaderboard connected to the CS Dropbox to allow students to compare their submissions against each other in real time before the submission deadline.
-Evaluation
-I will request feedback from current students about their overall satisfaction with the programming assignments as compared to additional theoretical problems (which are still the assignment backbone), their usage of my tools, and their general suggestions, to improve subsequent assignments. I will also request feedback from Professor Weinberg and the undergraduate graders of the course regarding how to provide better instructor-side tooling for the assignments. My success will be valuable through students’ self-perceived ability to focus on the core assignment content without experiencing undue difficulties with the assignment structure and through instructors’ present and future usage of the developed  assignments. Qualitative measures of success include elements of survey results described above, decrease in illegal (i.e. errors unrelated to course content) programs submitted as measured by anonymized metrics such as lower-outlier rates in quantitative simulation performance of student submissions, and decrease in instructor resources (e.g. time) required to maintain and grade the assignments. These data can be compared to similar data from the two similar exercises assigned in previous years.
-Big mistake in ‘present’ - bad at communicating how students would be graded
-In the first three weeks of the semester, I have already developed, implemented, and deployed two assignments, and have developed all of the tools necessary for grading submissions. I am currently collecting the completed tools into one automated script which will be able to produce collated student results and to aggregate results into graphics for presentation. Preliminary data suggests that rate of illegal submissions has dropped dramatically with the availability to students of improved testing software.
+The only resources available from Fall 2012 were collected from the course Google Code repository.\footnote{https://code.google.com/archive/p/cos445-scripts/}
+This repository contains incomplete Python skeleton code for a basic tournament.
+This was uploaded to the current course repository,\footnote{https://github.com/PrincetonUniversity/cos445-hw/tree/f12 requires invite: contact author or department} but was not reused.
 
+The Spring 2014 iteration of the course was developed on a private GitHub repository.\footnote{https://github.com/ynaamad/cos445}
+Through a clone of this repository stored on Cycles, I discovered that the course had PHP and Java implementations of strategy design exercises for Prisoner's Dilemma and another auction setting.
+The Java code consisted of student handouts of interfaces and some testing code, but the testing code was not designed to be automated for grading and was not modular: it tested manually-enterred strategies against each other and assignment-specific details (e.g.\ game structure and payoffs) were integrated within the simulation code.
+As a design decision I dismissed the available PHP code, which was used for course grading, due to language unfamiliarity.
+These resources were uploaded to the current course repository,\footnote{https://github.com/PrincetonUniversity/cos445-hw/tree/s14 requires invite: contact author or department} but were not reused, in part because they were located and examined only when I was given access to the course site in order to deploy my project.
 
-Framing:
--design assignments vs building assignment infrastructure
-- present vs future
--’do it, do it right, do it again’ (modularity, extensibility, reusability)
--Components: student testing script, dropbox testing script, leaderboard script, grader script, sample strategies, instructor strategies. 4/6 reuasable
-How are the programming assignments graded? Why were we not informed of how they would be graded for the first two problem sets?
-Here is a link to the grading policies sheet for programming assignments: GradesForProgramming.pdf. This document was in the General Resources section of the Piazza resources page, referred to from the programming assignment description for both problem sets (although the reference was confusing). Survey results indicate that we didn't properly advertise it and most students were not aware of its existence. Thus, a lot of students were surprised that the objective questions and the strength of the writeup were the dominant factors in their grades --- not the performance of their software. Given that we did a poor job making this clear, we'll be altering how these two assignments are included in your final grade. See @394 for details.
-What is the role of programming in a theory course?
-Survey results indicate at least a few students are confused why they need to program in a theory course. One key difference between COS 445 (being a theoretical computer science course on game theory) and ECO 418, MAT 378, or POL 347 (other game theory courses offered at Princeton) is that we place some emphasis on the connections between game-theoretic results and algorithms, software, and other aspects of computer science. One way in which we do this is by asking students to connect their learning in this course to their learning in prerequisite courses, in this case COS 226. Past course feedback was overwhelmingly positive for programming challenges (so the hope is that the initial negative feedback this cycle is due more to poor administration)
-Here's what we didn't make clear: the "programming assignments" aren't really about your ability to code. They are about placing the theoretical results from the course in context. They create a scenario in which mastery of theoretical results from the course content is demonstrated by making and justifying real-world decisions. However (and we didn't communicate this well), we are still grading your response to the programming exercises as a theory problem. That is why 2/3 of the credit on the "programming exercises" goes to the theoretical questions, and why poor performance of your software strategy (so long as it does not crash) can be entirely offset by a well-written writeup. So, in actuality, 0% of your grade is solely dependent on your programming ability --- as is appropriate in a theory course! We include the empirical performance of your strategy in a way that can only benefit your grade in the course, to reward students who demonstrated mastery of the course content by designing a great strategy even if they did not describe it perfectly
-Why do we have to use Java (not Python)?
-We would love to do these assignments in Python, as many students requested, but unfortunately we do not have Python experience as a course prerequisite and are firmly of the conviction that it is inappropriate for a course to expect students to learn a programming language they have never seen before with no formal instruction (no matter how many other courses do that).
-Additionally, empirical data from other course surveys suggests that 90% of students report themselves fluent in Java after the Princeton introductory sequence, compared to 30% for python.
-Why are my strategies graded against instructor strategies instead of against the strategies of my peers?
-We do not believe it is right to grade students against their peers' submissions because academic performance should not be a zero-sum game. This was overwhelmingly requested by last year's class.
+Beyond COS 445 at Princeton, many universities have taught computer science courses in algorithmic game theory.
+However, a survey of several universities' courses, including courses at Harvard\footnote{https://beta.blogs.harvard.edu/k108875/}, Stanford\footnote{https://theory.stanford.edu/~tim/364a.html and https://theory.stanford.edu/~tim/f16/f16.html}, Cornell\footnote{https://www.cs.cornell.edu/courses/cs6840/2014sp/}, U. Washington\footnote{https://courses.cs.washington.edu/courses/cse522/05sp/}, Yale\footnote{https://zoo.cs.yale.edu/classes/cs455/fall11/}, U. Penn\footnote{https://www.cis.upenn.edu/~aaroth/courses/agtS15.html}, Georgia Tech\footnote{https://web.archive.org/web/20131002121909/https://www.cc.gatech.edu/\%7Eninamf/LGO10/index.html}, Carnegie Mellon\footnote{https://www.cs.cmu.edu/~arielpro/15896s16/index.html}, and Duke\footnote{https://www2.cs.duke.edu/courses/spring16/compsci590.4/} identified only one other course with similarly structured assignments.
 
+Harvard's Computer Science 136, ``Economics and Computation'',\footnote{https://beta.blogs.harvard.edu/k108875/assignments/} assigns two programming problem sets.
+The first requires implementation of a peer-to-peer filesharing system similar to Bittorrent, a protocol in which incentives parallel Prisoner's Dilemma.
+However, the assignment is not a competition and student solutions are not differentiated based on strategic properties.
+The second assignment is a strategy design exercise built on the generalized second-price auction, in which student strategies vary and are graded based on their performance in a competitive environment.
+This is very similar to both the Spring 2014 and Spring 2017 auction exercises of COS 445 at Princeton.
+However, the grading structure of this assignment is quite different from the grading structure of the COS 445 strategy design exercises, and the implementation is in Python.
+While comparison between COS 445 assignments and CS 136 assignments in a future project might provide some pedagogical value, such work would be out of scope for this project.
+Given that these assignments are implemented in Python, only handout (and not grading) code is available, and the assignments are graded differently, these resources were dismissed as a base for development of new resources for COS 445 at Princeton.
 
-\section{Ethics}
+Many universities, including Princeton, maintain extensive systems for the automatic submission and processing of student assignments.
+Such resources are useful in the general case of developing new programming-based assignments, but no such resources replicate the behavior implemented in this project.
+Most autograding systems are designed with an assumption that student submission are graded in a sandbox, isolated from other student submissions.
+Such systems are not applicable to this project, since the strategy design exercises involve evaluation of student strategy performance in a common environment.
+However, existing resources for assignment submission and student feedback in use by Princeton are used in this assignment.
+I integrated some CS DropBox\footnote{https://csguide.cs.princeton.edu/academic/csdropbox} functionality where relevant, and modelled the leaderboard structure after review of the leaderboard implementation used in other Princeton CS classes.
+Generally, however, no such tools would leverage the high degree of structural similarity between strategy design exercises, and a dedicated project for these exercises will allow for more efficient development and evaluation.
 
-Your independent work report should abide by the basic standards of scholarly ethics and by the Princeton Honor Code. If you have any doubts about how to cite
-other work, how to quote or include text or images from other works, or other issues, please discuss them with your project adviser or with the IW coordinators. 
+\section*{Conclusions}
+prisoner's dilemma + search auctions
 
+\section*{Future Work}
 
+Some of the implementations of my infrastructure could be simplified using ClassLoaders, which would replace some of the Python code.
+This improvement was inspired by the implementation of ClassLoaders in the Spring 2014 student handout code.
 
-\bstctlcite{bstctl:etal, bstctl:nodash, bstctl:simpurl}
-\bibliographystyle{IEEEtranS}
-\bibliography{references}
+Earlier assignments were built off of earlier versions of the infrastructure and will need to be ported to newer versions when they are reused
 
 \end{document}
 

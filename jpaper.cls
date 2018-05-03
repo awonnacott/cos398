@@ -26,7 +26,7 @@
 \DeclareOption{hyperref}{\toggletrue{jp@hyperref}}
 \DeclareOption{nohyperref}{\togglefalse{jp@hyperref}}
 \ExecuteOptions{nolineno,pageno,hyperref}
-\ProcessOptions
+\ProcessOptions{}
 
 % Load the underlying article class.
 \LoadClass[letterpaper,12pt]{article}
@@ -64,143 +64,144 @@
 \setlength{\droptitle}{-3.5em}
 
 \pretitle{\begin{center}\vspace{-.5in}
--- Independent Work Report Fall, \IWreport\ -- \\
-\vspace{.35in}
-\normalfont\Large\bfseries}
-\posttitle{\par\end{center}}
+    --- Independent Work Report, \Semester{} \IWreport{} ---
+
+    \vspace{.35in}
+    \normalfont\Large\bfseries}
+  \posttitle{\par\end{center}}
 \preauthor{\begin{center}\normalfont\large%
     \begin{tabular}[t]{c}}
-\postauthor{\end{tabular}\par\end{center}}
-\predate{}
-\postdate{}
+      \postauthor{\end{tabular}\par\end{center}}
+  \predate{}
+  \postdate{}
 
 
-% The abstract should be normally sized and italicized. Abstract leading
-% should, in general, follow the normal leading.
-\RequirePackage{abstract}
-\newcommand{\abstractspacing}{\normalspacing}
-\renewcommand{\abstractnamefont}{\normalfont\large\bfseries}
-\renewcommand{\abstracttextfont}{\normalfont\itshape\abstractspacing}
-\setlength{\absleftindent}{0in}
-\setlength{\absrightindent}{0in}
-\setlength{\abstitleskip}{-1.5em}
+  % The abstract should be normally sized and italicized. Abstract leading
+  % should, in general, follow the normal leading.
+  \RequirePackage{abstract}
+  \newcommand{\abstractspacing}{\normalspacing}
+  \renewcommand{\abstractnamefont}{\normalfont\large\bfseries}
+  \renewcommand{\abstracttextfont}{\normalfont\itshape\abstractspacing}
+  \setlength{\absleftindent}{0in}
+  \setlength{\absrightindent}{0in}
+  \setlength{\abstitleskip}{-1.5em}
 
-% Compress vertical space around section and subsection headings. Make
-% subsubsection headings run-in (i.e. part of the following paragraph).
-\RequirePackage[compact]{titlesec}
-\titleformat{\section}[hang]{\normalfont\large\bfseries}{\thesection. }%
+  % Compress vertical space around section and subsection headings. Make
+  % subsubsection headings run-in (i.e. part of the following paragraph).
+  \RequirePackage[compact]{titlesec}
+  \titleformat{\section}[hang]{\normalfont\large\bfseries}{\thesection. }%
   {0pt}{}{}
-\titleformat{\subsection}[hang]{\normalfont\bfseries}{\thesubsection. }%
+  \titleformat{\subsection}[hang]{\normalfont\bfseries}{\thesubsection. }%
   {0pt}{}{}
-\titleformat{\subsubsection}[runin]{\normalfont\bfseries}{\thesubsubsection. }%
+  \titleformat{\subsubsection}[runin]{\normalfont\bfseries}{\thesubsubsection. }%
   {0pt}{}{}
-\newlength{\sectionspace}
-\setlength{\sectionspace}{1.5ex plus 0.25ex}
-\titlespacing*{\section}{0pt}{\sectionspace}{\sectionspace}
-\titlespacing*{\subsection}{0pt}{\sectionspace}{\sectionspace}
-\titlespacing*{\subsubsection}{0pt}{\parskip}{0.25em plus 0.1em minus 0.05em}
+  \newlength{\sectionspace}
+  \setlength{\sectionspace}{1.5ex plus 0.25ex}
+  \titlespacing*{\section}{0pt}{\sectionspace}{\sectionspace}
+  \titlespacing*{\subsection}{0pt}{\sectionspace}{\sectionspace}
+  \titlespacing*{\subsubsection}{0pt}{\parskip}{0.25em plus 0.1em minus 0.05em}
 
-% Compress itemize and enumerate environments.
-\RequirePackage{enumerate}
-\RequirePackage{enumitem}
-\setlist{noitemsep, leftmargin=*, topsep=0pt, partopsep=0pt}
+  % Compress itemize and enumerate environments.
+  \RequirePackage{enumerate}
+  \RequirePackage{enumitem}
+  \setlist{noitemsep, leftmargin=*, topsep=0pt, partopsep=0pt}
 
-% Bibliography formatting.
-\newcommand{\bibspacing}{\setstretch{0}}
-\let\jp@bibliography\thebibliography
-\renewcommand{\thebibliography}[1]{%
-  \jp@bibliography{#1}%
-  \setlength{\itemsep}{-0.25em} \footnotesize \bibspacing%
-  \vspace{-0.25em}}
-% This is IEEEtran's bibliography formatting control macro.
-\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
-\def\@bstctlcite[#1]#2{\@bsphack
-  \@for\@citeb:=#2\do{%
-    \edef\@citeb{\expandafter\@firstofone\@citeb}%
-    \if@filesw\immediate\write\csname #1\endcsname%
+  % Bibliography formatting.
+  \newcommand{\bibspacing}{\setstretch{0}}
+  \let\jp@bibliography\thebibliography{}
+  \renewcommand{\thebibliography}[1]{%
+    \jp@bibliography{#1}%
+    \setlength{\itemsep}{-0.25em} \footnotesize \bibspacing%
+    \vspace{-0.25em}}
+  % This is IEEEtran's bibliography formatting control macro.
+  \def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}]}
+  \def\@bstctlcite[#1]#2{\@bsphack
+    \@for\@citeb:=#2\do{%
+      \edef\@citeb{\expandafter\@firstofone\@citeb}%
+      \if@filesw\immediate\write\csname #1\endcsname%
       {\string\citation{\@citeb}}\fi}%
-  \@esphack}
+    \@esphack}
 
-% Settings for figures and tables. Figure captions are placed below the figure,
-% while table captions are placed above the table. All captions are sans-serif.
-\RequirePackage[font={normalsize,sf,bf}]{caption}
-\RequirePackage[position=bottom]{subfig}
-\captionsetup[table]{aboveskip=0.5em, belowskip=0.5em}
-\captionsetup[figure]{aboveskip=0.5em, belowskip=0em}
-\captionsetup[subfloat]{font={small,sf}}
-\setcounter{topnumber}{2}
-\setcounter{dbltopnumber}{2}
-\setcounter{bottomnumber}{2}
-\setcounter{totalnumber}{4}
-\renewcommand{\topfraction}{0.85}
-\renewcommand{\dbltopfraction}{0.9}
-\renewcommand{\bottomfraction}{0.85}
-\renewcommand{\textfraction}{0.07}
-\renewcommand{\floatpagefraction}{0.85}
-\renewcommand{\dblfloatpagefraction}{0.85}
+  % Settings for figures and tables. Figure captions are placed below the figure,
+  % while table captions are placed above the table. All captions are sans-serif.
+  \RequirePackage[font={normalsize,sf,bf}]{caption}
+  \RequirePackage[position=bottom]{subfig}
+  \captionsetup[table]{aboveskip=0.5em, belowskip=0.5em}
+  \captionsetup[figure]{aboveskip=0.5em, belowskip=0em}
+  \captionsetup[subfloat]{font={small,sf}}
+  \setcounter{topnumber}{2}
+  \setcounter{dbltopnumber}{2}
+  \setcounter{bottomnumber}{2}
+  \setcounter{totalnumber}{4}
+  \renewcommand{\topfraction}{0.85}
+  \renewcommand{\dbltopfraction}{0.9}
+  \renewcommand{\bottomfraction}{0.85}
+  \renewcommand{\textfraction}{0.07}
+  \renewcommand{\floatpagefraction}{0.85}
+  \renewcommand{\dblfloatpagefraction}{0.85}
 
-\setlength{\floatsep}{0.5em plus 0.2em minus 0.2em}
-\setlength{\dblfloatsep}{0.5em plus 0.2em minus 0.2em}
-\setlength{\textfloatsep}{0.5em plus 0.2em minus 0.2em}
-\setlength{\dbltextfloatsep}{0.5em plus 0.2em minus 0.2em}
+  \setlength{\floatsep}{0.5em plus 0.2em minus 0.2em}
+  \setlength{\dblfloatsep}{0.5em plus 0.2em minus 0.2em}
+  \setlength{\textfloatsep}{0.5em plus 0.2em minus 0.2em}
+  \setlength{\dbltextfloatsep}{0.5em plus 0.2em minus 0.2em}
 
-% Utility packages for floats and tables.
-\RequirePackage{float}
-\RequirePackage{graphicx}
-\RequirePackage{booktabs}
-\RequirePackage{multirow}
+  % Utility packages for floats and tables.
+  \RequirePackage{float}
+  \RequirePackage{graphicx}
+  \RequirePackage{booktabs}
+  \RequirePackage{multirow}
 
-% Page numbering.
-\iftoggle{jp@pageno}{%
-  \pagestyle{plain}
-  \newcommand{\jp@mt@pageno}{}}{%
-  \pagestyle{empty}
-  \newcommand{\jp@mt@pageno}{\thispagestyle{empty}}}
+  % Page numbering.
+  \iftoggle{jp@pageno}{%
+    \pagestyle{plain}
+    \newcommand{\jp@mt@pageno}{}}{%
+    \pagestyle{empty}
+    \newcommand{\jp@mt@pageno}{\thispagestyle{empty}}}
 
-% Line numbering.
-\iftoggle{jp@lineno}{%
-  \RequirePackage{lineno}
-  \renewcommand{\linenumberfont}{\normalfont\tt\small}
-  \newcommand{\jp@mt@lineno}{\linenumbers}
-}{%
-  \newcommand{\jp@mt@lineno}{}
-}
+  % Line numbering.
+  \iftoggle{jp@lineno}{%
+    \RequirePackage{lineno}
+    \renewcommand{\linenumberfont}{\normalfont\tt\small}
+    \newcommand{\jp@mt@lineno}{\linenumbers}
+  }{%
+    \newcommand{\jp@mt@lineno}{}
+  }
 
-% Replace maketitle to invoke settings for leading, page numbering, and line
-% numbering.
-\let\jp@maketitle\maketitle
-\renewcommand{\maketitle}{%
-  \jp@maketitle%
-  \jp@mt@pageno%
-  \jp@mt@lineno%
-  \normalspacing}
+  % Replace maketitle to invoke settings for leading, page numbering, and line
+  % numbering.
+  \let\jp@maketitle\maketitle
+  \renewcommand{\maketitle}{%
+    \jp@maketitle%
+    \jp@mt@pageno%
+    \jp@mt@lineno%
+    \normalspacing}
 
-% Footnotes may not span pages.
-\interfootnotelinepenalty=10000
+  % Footnotes may not span pages.
+  \interfootnotelinepenalty=10000
 
-% Formatting for margin notes (which you may find useful during editing).
-\let\jp@marginpar\marginpar
-\renewcommand\marginpar[1]{\jp@marginpar%
-  [\raggedleft\singlespacing\footnotesize\color{red} #1]%
-  {\raggedright\singlespacing\footnotesize\color{red} #1}}
+  % Formatting for margin notes (which you may find useful during editing).
+  \let\jp@marginpar\marginpar{}
+  \renewcommand\marginpar[1]{\jp@marginpar%
+    [\raggedleft\singlespacing\footnotesize\color{red} #1]%
+    {\raggedright\singlespacing\footnotesize\color{red} #1}}
 
-\setlength{\marginparwidth}{0.65in}
+  \setlength{\marginparwidth}{0.65in}
 
-% Link and URL formatting.
-\iftoggle{jp@hyperref}{%
-  \RequirePackage{hyperref}
-  \hypersetup{%
-    unicode=true,%
-    pdfstartview={FitH},%
-    colorlinks=true,%
-    citecolor=red,%
-    %filecolor=black,%
-    %linkcolor=black,%
-    %urlcolor=black
-}}{}
-\RequirePackage{url}
+  % Link and URL formatting.
+  \iftoggle{jp@hyperref}{%
+    \RequirePackage{hyperref}
+    \hypersetup{%
+      unicode=true,%
+      pdfstartview={FitH},%
+      colorlinks=true,%
+      citecolor=red,%
+      % filecolor=black,%
+      % linkcolor=black,%
+      % urlcolor=black
+    }}{}
+  \RequirePackage{url}
 
-% Scientific units.
-\RequirePackage[squaren]{SIunits}
+  % Scientific units.
+  \RequirePackage[squaren]{SIunits}
 
-\endinput
+  \endinput{}
