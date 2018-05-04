@@ -34,11 +34,36 @@ A Modular Framework for Developing, Deploying, and Evaluating Game-Theoretic Str
 
 \newpage
 \section*{Introduction}
-\begin{itemize}
-\item Discussion of strategy design assignments on cos445sp1[78] with specific examples (from this year + PD)
-\item Mention how they are graded (not zero-sum)
-\item While these assignments were popular with students\footnote{https://reg-captiva.princeton.edu/chart/index.php?terminfo=1184\&courseinfo=012095 requires CAS login}, they also demanded considerable instructor resources be dedicated to building and grading software resoruces. Additionally, due to the limited tooling provided for students to evaluate their submissions, many submissions did not compile or caused runtime exceptions, requiring considerable additional instructor resources.
-\end{itemize}
+Four Princeton University departments offer courses in game theory: economics, politics, mathematics, and computer science.
+While all of these courses teach the core concepts of game theory, each also connects this core to relevant examples and topics in its department.
+For instance, in the computer science department, COS 445, ``Economics and Computing'', places emphasis on the connections between game-theoretic results and algorithms, software, and other aspects of computer science.
+This is represented in the course topics, which focus on the relevance of game theory to matchings, auctions, cryptocurrencies, and other multi-actor computational systems.\footnote{https://www.cs.princeton.edu/~smattw/Teaching/cos445sp18.htm}
+It is also represented in the design of the problem sets, which contain, in addition to traditional proof-based exercises, programming-based exercises which connect course topics to prerequesite computer science skills.
+These programming-based exercises take a common form.
+
+Students are presented with an iterated game, described both in the assignment handout and as a Java interface.
+A classic iterated game is the iterated prisoner's dilemma\footnote{Figure: PD game -> Java iterface}, in which two players must collaborate to receive the best outcome, but are each incentivized to defect, which results in a less preferred outcome, and have acecss to the other player's play history when making their own decision.
+While this game is well-studied and models some real-world incentive structures, the course also draws on various real-world phenomenon to design iterated games, including, from semester to semester, a college admissions game from the perspective of stable matchings, a search advertisement bidding game using auction theory, an election informed by voting theory, a gerrymandering-prevention simulation inspired by fair division, and exploitation of a fictional cryptocurrency by analyzing blockchain incentives.
+These examples are not exhaustive, but illustrate the variety of course topics with potential for translation to iterated games.
+
+Students then craft strategies to play the specified game, based on their own analyses of the game's equilbirium, and based on their own priors over the strategies which will be designed by their peers.
+These strategies are evaluated on both on their design quality and on their empirical performance.
+While design quality is evaluated on a purely individual basis, empirical performance is measured by simulating the play of the collection of submitted student strategies.
+For instance, for the iterated prisoner's dilemma, every student strategy plays one full game (consisting of many iterations of the prisoner's dilemma) against each other strategy, and strategies are scored based off the average payoff they achieved.
+For the search advertisement game, all the student strategies are concurrently asked to bid on the same search terms, and are scored based on their revenue from ad clicks (where each bidder knows the click-through rate for a term prior to bidding on that term) less their expenditures on advertising.
+To create a more realistic simulation, students are graded solely the performance of their own strategy, not on a curve of the performance of their peers.
+That is, student grades on these strategy design exercises are not zero-sum.
+
+While the strategy design exercises assignments are popular with students\footnote{https://reg-captiva.princeton.edu/chart/index.php?terminfo=1184\&courseinfo=012095 requires CAS login}, they also demanded considerable instructor resources be dedicated to building and grading software resoruces, which have historically been significantly rebuilt for each assignment.
+Worse still, due to course staffing changes, this work has not been preserved between semesters, resulting in inefficient allocation of department resources to producing new exercises without the institutional memory or software resources previously developed.
+Due to the limited tooling provided in past semesters for students to evaluate their submissions, many submissions did not compile or caused runtime exceptions, requiring considerable additional instructor resources.
+
+The goal of this project is to discover to what degree the development of new strategy design exercises can be simplified or automated, to improve the student resources available during the completion of these exercises, and to create institutional memory and decrease year-to-year repetition of the same work.
+This was accomplished by designing a reuasble framework which embodies the commonality between strategy design exercises, allowing instructors to change only the necessary, assignment-specific details, and which will include more advanced automated grading tools than previously existed for the course.
+Within this framework, I have built a collection of utilities to facilitate student self-evaluation and decrease strategy iteration overhead.
+
+Through this work, I aim to improve the quality of computer science theory education, from the perspectives of both the students and faculty associated with COS 445.
+Quantitative metrics, including software failure rates and instructor time usage, and qualitiative metrics, including student and instructor satisfaction, both illustrate the improvements to the course and emphasize the importance of quality tooling to quality programming-based assignments.
 
 \section*{Related Work}
 This work was developed to replace previous software design exercises assigned to COS 445 students\footnote{including the author} in Spring 2017.\footnote{https://web.archive.org/web/20170916042726/https://www.cs.princeton.edu/~smattw/Teaching/cos445sp17.htm}
@@ -88,8 +113,16 @@ Generally, however, no such tools would leverage the high degree of structural s
 
 \section*{Approach}
 Throughout the course of developing this framework, I have leveraged my role as an undergraduate course assistant for COS 445 during the current semester.
+
+
 That is, in order to develop a reusable toolchain for building strategy design exercises, I have developed strategy design exercises to inform the design and development of a reusable toolchain.
 
+* how to discover what can be modularized
+
+\section*{Implementation}
+* how to modularize that
+
+\section*{Results}
 
 \section*{Conclusions}
 prisoner's dilemma + search auctions
@@ -99,7 +132,18 @@ prisoner's dilemma + search auctions
 Some of the implementations of my infrastructure could be simplified using ClassLoaders, which would replace some of the Python code.
 This improvement was inspired by the implementation of ClassLoaders in the Spring 2014 student handout code.
 
-Earlier assignments were built off of earlier versions of the infrastructure and will need to be ported to newer versions when they are reused
+Earlier assignments were built off of earlier versions of the infrastructure and will need to be ported to newer versions when they are reused: do next year
+
+will be reused in two years without my oversight
+
+other universities? matt through academic connections
+
+\section*{Acknowledgements}
+
+\section*{Ethics}
+* assignments used in the course were used by the executive decision of Professor Weinberg,
+* potential conflicts of interest
+* honor code
 
 \end{document}
 
