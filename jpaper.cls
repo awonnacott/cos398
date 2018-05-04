@@ -36,7 +36,6 @@
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[T1]{fontenc}
 \RequirePackage{verbatim}
-\RequirePackage{fixltx2e}
 \RequirePackage[usenames,dvipsnames,svgnames,table]{xcolor}
 
 % Basic text typesetting options.
@@ -202,6 +201,6 @@
   \RequirePackage{url}
 
   % Scientific units.
-  \RequirePackage[squaren]{SIunits}
+  \RequirePackage{SIunits}
 
   \endinput{}
