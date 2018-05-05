@@ -3,8 +3,11 @@
 \newcommand{\Semester}{Spring}
 \newcommand{\IWreport}{2018}
 \newcommand{\quotes}[1]{``#1''}
-
-\widowpenalty=9999
+\makeatletter
+\def\verbatim@font{\linespread{1}\normalfont\ttfamily}
+\makeatother
+\clubpenalty9998
+\widowpenalty9999
 
 \usepackage[normalem]{ulem}
 
@@ -26,7 +29,7 @@ A Modular Framework for Developing, Deploying, and Evaluating Game-Theoretic Str
   This course employs small simulations to develop students' ability to use theoretical tools to analyze more real-world situations.
   These strategy design exercises require considerably more software infrastructure than would a usual theoretical problem set, including handout code for student self-evaluation and software autograders.
   While some frameworks for automated grading exist, none surveyed provided the specific features desired for repeatedly developing very similarly structured assignments and evaluating student submissions in the context of each other.
-  In order to facilitate more automated grading of these assignments in this and future semesters, I have developed a framework of modular, extensible tools for building all of the necessary compoenents oif these strategy design assignments.
+  In order to facilitate more automated grading of these assignments in this and future semesters, I have developed a framework of modular, extensible tools for building all of the necessary components of these strategy design assignments.
   Concurrently, in my role as a grader for COS 445, I used the framework to develop and evaluate four strategy design assignments, using assignment specifications developed with Professor Weinberg.
   This provides feedback from real student and instructor users which was used to improve the design.
   Empirical results demonstrate the importance of quality tooling to effective use of instructor time, low broken submission rates, and high student satisfaction.
@@ -147,23 +150,170 @@ Many students suggested the assignments be implemented in Python,\footnote{per s
 Members of the Mechanism Design group are not expected to have working proficiency with Java, but many have enough experience with Python to support students.
 Additionally, Python's conciseness and ability to load classes from user input would be useful when implementing tools which are parametrized on user-input strategy names.
 Unfortunately, COS 445 does not have Python experience as a course prerequisite, only Java experience.
-Additionally, survey data from other course surveys suggests that 90\% of students report themselves fluent in Java after the Princeton introductory sequence, compared to 30\% for python.\footnote{COS 333 survey data}
+Additionally, survey data from other course surveys suggests that 90\% of students report themselves fluent in Java after the Princeton introductory sequence, compared to 30\% for Python.\footnote{COS 333 survey data}
 
 Thus, the whole system under consideration is constrained: it must support student strategy implementations in Java.
 Given this constraint, and lacking any other language selection pressures, I elected to implement as much of the assignments as possible in Java, with limited usage of scripting languages such as make, Python, and bash.
 These scripting languages were used where Java would not suffice and only for tasks for which implementation details were irrelevant to student assignment comprehension.
 
-* how to modularize that
-* what is reusable
-* what isnt reusable
-%This was accomplished by designing a reuasble framework which embodies the commonality between strategy design exercises, allowing instructors creating new exercises to change only the necessary, assignment-specific details, and which will include more advanced automated grading tools than previously existed for the course.
-%Within this framework, I have built a collection of utilities to facilitate students' evaluation of their own strategies and to decrease strategy iteration overhead.
-how to grade people not against peers
+Java also offers convenience to assignment designers by enforcing an object-oriented design pattern.
+This allows instructors to communicate an assignment specification formally through a well-documented interface.
+Furthermore, by constructing new instances of the student implementations between game rounds, instructors can programatically enforce that students do not employ learning strategies outside the parameters of the assignment.\footnote{This requires that instructors forbid the usage of static variables, but it is trivial to verify compliance with this requirement.}
 
-* what extensions
+However, several default Java behaviors do not map cleanly onto the desired properties of strategy design exercises.
+For instance, Java objects used as function parameters are passed by mutable, nullable reference.
+This is in contrast to functional languages (including Ocaml and Rust), where parameters are immutable and not null unless otherwise explicitly specified.
+Current industry standards for Java code obviate both of these issues using modern language features.\footnote{https://github.com/google/guava/wiki/UsingAndAvoidingNullExplained}\footnote{https://github.com/google/guava/wiki/ImmutableCollectionsExplained}\footnote{https://docs.oracle.com/javase/7/docs/api/java/util/Collections.html#unmodifiableList(java.util.List)}
+In order to preserve backwards compatibility, these features are not implemented by default.
+Where possible, I have taken advantage of these features.
+Since the assignment specification documents that students are required not to modify parameters, instructor code can use unmodifiable (immutable) containers.
+However, I have not included NotNull annotations because they are not taught in the prerequesite courses and, as previously noted, these assignments should not require students to self-teach any programming skills.
+In my own framework code, which must be supported by future instructors, I decided to assume support for Java 9, released in fall 2016, and to use modern language features, since course instructors are at least as likely to have industry experience with modern Java code as experience with the Princeton introductory sequence.\footnote{https://www.techworld.com/news/developers/java-9-release-date-new-features-3660988/}
+
+In order to design my framework, I reviewed unmodularized code from a past strategy design exercise, the Spring 2017 auctions exercise.
+This is the only assignment to which I had access to the full implementation of the student handout (having taken the course) and the grader code (preserved by Professor Weinberg).
+The first piece of the assignment to be implemented, after the game design is complete, is the student interface:\footnote{TODO: make this code a figure}
+\begin{verbatim}
+import java.util.List;
+
+public interface Bidder {
+    // Return your bid for the current day
+    // Called once per day before the auction
+    public double getBid(double dailyValue);
+
+    // Let you know if you won, and how much the winners paid
+    // Called once per day after the auction
+    public void addResults(List<Double> bids, int myBid, double myPayment);
+}
+\end{verbatim}
+This interface describes what students' strategies must do: they must, each day, bid on an auction of advertising slots which appear on a search results page (often called ``sponsored search results''), and they value the word being auctioned each day at a different value.
+The strategy also has access the winning bids for each of the ten sponsored results from each past day, and knows if it won any auctions itself, and if so how much it paid.
+This allows the strategy to obey the budget constraint: across all 1000 days, it may not spend more than 500.
+These constants are not documented in the interface as designed, only in the assignment specification.
+The instructors distribute a simple sample student implementation, in this case the truthful bidder.
+Cyril also implemented a program used to grade the student-submitted strategies.
+This program had two methods: \texttt{main} and \texttt{trial}.
+The former ran 100 trials and printed out the results, averaging the outcomes across each trial for each student.
+The latter contained an implementation of the generalized second-price auction format described in the assignment specification.
+
+Having reviewed a former assignment, I implemented the first assignment handout for the course this semester: the college admissions simulation described previously.
+In doing so, I made several implementation decisions in order to facilitate future reconfiguration of the game being played and of the postprocessing of the tournament results which are representative of design decisions made throughout the assignment.
+In every assignment, the tournament simulation portion (instructor-written code) is broken up into game rounds, result processing and amortization, and further postprocessing, such as grade assignment and output formatting.
+The divide between game rounds and code which processes game results was present in Cyril's auction code, as the separation between the \texttt{trial} and \texttt{main} methods.
+However, this prior work did minimal amortization and no advanced output formatting, and had no separation between them.
+While the handout code written for the first assignment did minimal postprocessing, this distinction was quite useful when later developing the autograder and additional extensions.
+
+During the development of this handout, however, the statically-typed nature of Java raised some difficulty.
+Cyril's code had student submission names hardcoded into complex expressions, as though they had been copied in from a manually-written list formatted using sed.
+In the context of developing a handout to allow students to test multiple strategies of their own design, I determined requiring students to modify the simulator Java code whenever they changed which strategies they wanted to test would be so cumbersome that the simulator might not have been distributed at all.
+Additionally, graders desire functionality to configure the list of strategies to be evaluated at grading time, without having to manually list out all the student strategy names, and to easily modify this list to identify and diagnose misbehaving student strategies.
+Since Java is not able to type-check user-input strategy names, I determined that the most effective workaround for this issue would be to automatically rewrite the Java code before compile-time.
+
+For this purpose, I developed a simple Python script capable of rewriting arbitrary template plaintext files using a CSV file.
+This script, \texttt{formatBase.py}, builds a list of dictionaries, one for each row of the CSV, using the header of the CSV as the keys and the contents of the row as the values.
+Then, it rewrites its input by finding lines which start with \texttt{//R} and end with \texttt{//}, and replaces each such line with, for each row of the CSV, the line rewritten by replacing each curly-enclosed key with the corresponding value from that row.
+It also rewrites the key \texttt{0} with the row number from the configuration table.
+This script directly injects the contents of the configuration file into the Java code with no escaping, as is necessary in this application.
+However, this practice is extremely dangerous, since using a user-submitted configuration file would allow users to execute arbitrary code on the evaluation machine.
+Fortunately, this is not a security concern, since students already run arbitrary code on the evaluation machine: their submitted strategy.
+
+Given a CSV file as input with the header row \texttt{netID} and a row for each student's name, the following function is thus rewritten to instantiate one implementation of each Student class listed in the configuration file:
+\footnote{use figure}
+\begin{verbatim}
+    public static int[] oneEachTrial(double S, double T, double W)
+    {
+        // Initialize students
+        Student[] students = new Student[N];
+        //R students[{0}] = new Student_{netID}();//
+        return runTrial(students, S, T, W);
+    }
+\end{verbatim}
+In the above code from the college applications simulator, \texttt{S}, \texttt{T}, and \texttt{W} are configuration parameters for the simulation which were documented in the student interface.
+For contrast, the following method also instantiates an instance of an instructor-provided strategy using reflection.
+This illustrates potential variation in data collection code as enabled by my modular design, and is used in the autograder described below.
+\footnote{todo: figure}
+\begin{verbatim}
+    public static <Student_T extends Student> int[] withExtraTrial(
+            Class<Student_T> clazz, double S, double T, double W)
+    {
+        // Initialize students
+        Student[] students = new Student[N+1];
+        //R students[{0}] = new Student_{netID}();//
+        try {
+            students[N] = clazz.getConstructor().newInstance();
+        } catch (ReflectiveOperationException roe) {
+            roe.printStackTrace();
+            System.exit(1);
+        }
+
+        return runTrial(students, S, T, W);
+    }
+\end{verbatim}
+
+now we can also have a better handout
+outline better handout
+* interface
+* dumb implementation
+* full copy of the above code
+comment on use of formatbase here
+comment on separate files for each assignment - why (simplify handout)
+
+but we wanted a grader. how to build grader from that?
+brief tangent to how to grade, not against peers
+introduce replacement-comparison grading
+* have some instructor strategies designed to perform well
+* substitute, for each student, a copy of each instructor strategy
+* grade based on how many instructor strategies the student's strategy did better than against the same pool
+* comment about incentive structures of this method: correct due to amortization (maximize your expectation to maximize your chance of beating unknown instructor thresholds. amortization means your outcome equals your expectation)
+
+issue with this: O(mn) time
+* can cut down to O(m) time by just adding each instructor strategy one by one and seeing how they do against the whole field.
+* assume that each individual student has negligible impact on that instructor's performance.
+* Comment as to whether this is a realistic assumption.
+* comment on incentives of this method - approximately correct as before
+
+back to buidling the grader
+manually write the list of grader strategies
+make a new method very similar to one each trials: with extra trials
+lookup table: how many instructor strategies beat -> score
+didn't need to change the trial at all
+so that doesn't need to be changed when makign a new assignment
+we can now grade every assignment
+
+catch: sometimes we want to simulate multiple parameter settings for student code
+involves changing the main method a bit
+not much change
+
+so now we have a framework which makes it easy to build new assignments
+what really changes?
+build ultimatum
+
+we also have a framework to build new tools
+let's build new tools
+what shoudl we build?
+what problems to address?
+ease of testing
+``Works On My Machine''
+getting a better idea about how a strategy would perform against more realistic collection of peers
+
+dropbox checksubmit
+learned how cs dropbox works
+a little bash + make to copy in the student handout, detect and write a config file to run their code
+show script + makefile
+show an output
+
+leaderboard
+new tools: cycles cron
+simple to copy in all submissions, detect and write config file, run code, post it to website
+discuss issues
+student code breaking it
+harden the tester (try catch around each student with selfless behavior)
+student code causing compile failures
+no good solution here
+add check submit button to leaderboard and ask students to use it
 
 \section*{Results}
-As the goals of a project naturally define evaluation criteria, I have evaluated my project on the basis of those goals.
+As the goals of a project naturally define evaluation criteria, I have evaluated my project on the basis of each those goals: decreasing the work to build each assignment within a semester and the instructor time allocated to assignment implementation, eliminate the inter-year assignment reconstruction, improve available student resources, and in doing so improve student and instructor satisfaction.
 
 \begin{itemize}
 \item discover modularity and decrease assignment to assignment rewriting
@@ -202,6 +352,8 @@ prisoner's dilemma + search auctions
 
 Some of the implementations of my infrastructure could be simplified using ClassLoaders, which would replace some of the Python code.
 This improvement was inspired by the implementation of ClassLoaders in the Spring 2014 student handout code.
+
+would like to not use separate files even if lots of the code is the same - complicates handout but simplifies code reuse and iteration
 
 Earlier assignments were built off of earlier versions of the infrastructure and will need to be ported to newer versions when they are reused: do next year
 
