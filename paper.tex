@@ -34,6 +34,12 @@ A Modular Framework for Developing, Deploying, and Evaluating Game-Theoretic Str
 
 \newpage
 \section*{Introduction}
+My work builds upon existing programming-based game theory exercises assigned in an existing Princeton course.
+The intention of these strategy design exercises is to teach students how to use game theory to analyze a real world situation and work rationally, within healthy incentive structures where students do not try to hurt each others’ performance.
+Each past offering of the course has rebuilt these assignments from scratch, and all associated instructor tooling, resulting in unnecessarily high allocation of instructor time to grading.
+Additionally, the course has grown rapidly to become the single largest theoretical computer science course ever taught at Princeton.\footnote{registrar data here}\footnote{More students complete COS 340 in a given year, but it is taught in both fall and spring semesters.}
+In order to eliminate unnecessary annual replication of previous coursework development, improve course performance at scale, and improve the course experience for the students, I develop an extensible framework to improve these strategy design exercises.
+
 Four Princeton University departments offer courses in game theory: economics, politics, mathematics, and computer science.
 While all of these courses teach the core concepts of game theory, each also connects this core to relevant examples and topics in its department.
 For instance, in the computer science department, COS 445, ``Economics and Computing'', places emphasis on the connections between game-theoretic results and algorithms, software, and other aspects of computer science.
@@ -59,8 +65,8 @@ Worse still, due to course staffing changes, this work has not been preserved be
 Due to the limited tooling provided in past semesters for students to evaluate their submissions, many submissions did not compile or caused runtime exceptions, requiring considerable additional instructor resources.
 
 The goal of this project is to discover to what degree the development of new strategy design exercises can be simplified or automated, to improve the student resources available during the completion of these exercises, and to create institutional memory and decrease year-to-year repetition of the same work.
-This was accomplished by designing a reuasble framework which embodies the commonality between strategy design exercises, allowing instructors to change only the necessary, assignment-specific details, and which will include more advanced automated grading tools than previously existed for the course.
-Within this framework, I have built a collection of utilities to facilitate student self-evaluation and decrease strategy iteration overhead.
+This was accomplished by designing a reuasble framework which embodies the commonality between strategy design exercises, allowing instructors creating new exercises to change only the necessary, assignment-specific details, and which will include more advanced automated grading tools than previously existed for the course.
+Within this framework, I have built a collection of utilities to facilitate students' evaluation of their own strategies and to decrease strategy iteration overhead.
 
 Through this work, I aim to improve the quality of computer science theory education, from the perspectives of both the students and faculty associated with COS 445.
 Quantitative metrics, including software failure rates and instructor time usage, and qualitiative metrics, including student and instructor satisfaction, both illustrate the improvements to the course and emphasize the importance of quality tooling to quality programming-based assignments.
@@ -92,7 +98,7 @@ As a design decision I dismissed the available PHP code, which was used for cour
 These resources were uploaded to the current course repository,\footnote{https://github.com/PrincetonUniversity/cos445-hw/tree/s14 requires invite: contact author or department} but were not reused, in part because they were located and examined only when I was given access to the course site in order to deploy my project.
 
 Beyond COS 445 at Princeton, many universities have taught computer science courses in algorithmic game theory.
-However, a survey of several universities' courses, including courses at Harvard\footnote{https://beta.blogs.harvard.edu/k108875/}, Stanford\footnote{https://theory.stanford.edu/~tim/364a.html and https://theory.stanford.edu/~tim/f16/f16.html}, Cornell\footnote{https://www.cs.cornell.edu/courses/cs6840/2014sp/}, U. Washington\footnote{https://courses.cs.washington.edu/courses/cse522/05sp/}, Yale\footnote{https://zoo.cs.yale.edu/classes/cs455/fall11/}, U. Penn\footnote{https://www.cis.upenn.edu/~aaroth/courses/agtS15.html}, Georgia Tech\footnote{https://web.archive.org/web/20131002121909/https://www.cc.gatech.edu/\%7Eninamf/LGO10/index.html}, Carnegie Mellon\footnote{https://www.cs.cmu.edu/~arielpro/15896s16/index.html}, and Duke\footnote{https://www2.cs.duke.edu/courses/spring16/compsci590.4/} identified only one other course with similarly structured assignments.
+However, a survey of several universities' courses, including courses at Harvard\footnote{https://beta.blogs.harvard.edu/k108875/}, Stanford\footnote{https://theory.stanford.edu/~tim/364a.html and https://theory.stanford.edu/~tim/f16/f16.html}, Cornell\footnote{https://www.cs.cornell.edu/courses/cs6840/2014sp/}, U.\ Washington\footnote{https://courses.cs.washington.edu/courses/cse522/05sp/}, Yale\footnote{https://zoo.cs.yale.edu/classes/cs455/fall11/}, U.\ Penn\footnote{https://www.cis.upenn.edu/~aaroth/courses/agtS15.html}, Georgia Tech\footnote{https://web.archive.org/web/20131002121909/https://www.cc.gatech.edu/\%7Eninamf/LGO10/index.html}, Carnegie Mellon\footnote{https://www.cs.cmu.edu/~arielpro/15896s16/index.html}, and Duke\footnote{https://www2.cs.duke.edu/courses/spring16/compsci590.4/} identified only one other course with similarly structured assignments.
 
 Harvard's Computer Science 136, ``Economics and Computation'',\footnote{https://beta.blogs.harvard.edu/k108875/assignments/} assigns two programming problem sets.
 The first requires implementation of a peer-to-peer filesharing system similar to Bittorrent, a protocol in which incentives parallel Prisoner's Dilemma.
@@ -112,20 +118,62 @@ I integrated some CS DropBox\footnote{https://csguide.cs.princeton.edu/academic/
 Generally, however, no such tools would leverage the high degree of structural similarity between strategy design exercises, and a dedicated project for these exercises will allow for more efficient development and evaluation.
 
 \section*{Approach}
-Throughout the course of developing this framework, I have leveraged my role as an undergraduate course assistant for COS 445 during the current semester.
+Cyril Zhang completed the TA requirement for the PhD program last fall, so at the start of this semester it was unclear who among the graduate and undergraduate course staff would be responsible for maintaining these assignments.
+Thus, the course needed not just long-term work to improve student and instructor resources, but also short-term work to maintain and debug the same resources.
+These harmonizing requirement suggest that the product should consist of one extensible implementation of all the reusable components for software design exercises, developed iteratively in conjunction with its usage in the course.
+This software would naturally grow throughout development as demanded by the needs of the course, and the final product will naturally lower-bound the maximum degree of automation and modularity possible.
 
+Before the first problem set of the course was assigned in this semester, Matt and I designed and I implemented a handout interface and tools to allow students to test their strategies against each other.
+The game simulates college admissions using stable matchings.
+While I implemented this handout with the explicit goal of producing a tool to test out multiple different student strategies in the specified application environment, I followed the principles of modular software design covered in previous courses.\footnote{Kernighan and Pike chapter 4}
+I factored out the code which implemented the Gale-Shapley deferred acceptance algorithm for stable matchings from the code which amortized results from multiple randomized trials, and from agglomerated these results to output performance statistics for students.
+Thus, when it came time to implement the second strategy design exercise, I was able to reuse code which processed results of trials, even though the nature of the trails changed from college admissions to elections.
+Additionally, when it came time to grade the problem set, I was able to modify only the post-processing step to compute grades.
+Thus, creating a new assignment requires constant work in the number of framework extensions, and creating a new framework extension requires constant work in the number of assignments.
 
-That is, in order to develop a reusable toolchain for building strategy design exercises, I have developed strategy design exercises to inform the design and development of a reusable toolchain.
+The result of this process duplicates significant functionality from last year's assignments.
+However, because of conscious design decisions to factor our repeated code from assignment implementations, it accomplishes what previous implementations had not.
+It will be modular, as described above, so that new extensions such as additional tools or interfaces can be written for strategy design exercises.
+Throughout the semester, I can leverage my role as an undergraduate course assistant for COS 445 during the current semester in order to identify and produce such extensions.
+And, it will be reusable, both for the same assignments in future years, and for new strategy design exercises implemented by future course staff with lower overhead.
 
-* how to discover what can be modularized
+In order to increase the reusability, I elected to store it in a University-owned private GitHub repository.
+This ensures that, even after I have graduated, future course staff will have access to the project.
+Additionally, I documented the repository structure and each program's role in the repository, as documented later in this document.
 
 \section*{Implementation}
+The first key decision in the implementation of these programming assignments was language selection.
+Many students suggested the assignments be implemented in Python,\footnote{per survey 1 results}, and this would be preferred by the course staff as well.
+Members of the Mechanism Design group are not expected to have working proficiency with Java, but many have enough experience with Python to support students.
+Additionally, Python's conciseness and ability to load classes from user input would be useful when implementing tools which are parametrized on user-input strategy names.
+Unfortunately, COS 445 does not have Python experience as a course prerequisite, only Java experience.
+Additionally, survey data from other course surveys suggests that 90\% of students report themselves fluent in Java after the Princeton introductory sequence, compared to 30\% for python.\footnote{COS 333 survey data}
+
+Thus, the whole system under consideration is constrained: it must support student strategy implementations in Java.
+Given this constraint, and lacking any other language selection pressures, I elected to implement as much of the assignments as possible in Java, with limited usage of scripting languages such as make, Python, and bash.
+These scripting languages were used where Java would not suffice and only for tasks for which implementation details were irrelevant to student assignment comprehension.
+
 * how to modularize that
+* what is reusable
+* what isnt reusable
+This was accomplished by designing a reuasble framework which embodies the commonality between strategy design exercises, allowing instructors creating new exercises to change only the necessary, assignment-specific details, and which will include more advanced automated grading tools than previously existed for the course.
+Within this framework, I have built a collection of utilities to facilitate students' evaluation of their own strategies and to decrease strategy iteration overhead.
+how to grade people not against peers
+
+* what extensions
 
 \section*{Results}
+As the goals of a project naturally define evaluation criteria, I have evaluated my project on the basis of those goals.
+
+Thus, quantitative metrics, including software failure rates and instructor time usage, and qualitiative metrics, including student and instructor satisfaction, both illustrate the improvements to the course and emphasize the importance of quality tooling to quality programming-based assignments.
 
 \section*{Conclusions}
+Through this work, I aim to improve the quality of computer science theory education, from the perspectives of both the students and faculty associated with COS 445.
+
 prisoner's dilemma + search auctions
+
+The goal of this project is to discover to what degree the development of new strategy design exercises can be simplified or automated, to improve the student resources available during the completion of these exercises, and to create institutional memory and decrease year-to-year repetition of the same work.
+
 
 \section*{Future Work}
 
@@ -139,6 +187,12 @@ will be reused in two years without my oversight
 other universities? matt through academic connections
 
 \section*{Acknowledgements}
+* matt for assignment design lead
+* course staff, especially Andreea, Ariel, Evan, Heesu, Leila, Divya, Matheus, Wei, Dylan, for grading student writeups, providing me feedback and passing along student feedback
+* david walker for iw sem (helping me stay organized and on track, helping me identify my topic)
+* iw sem peers Greg, Alex, Mel, Noah for feedback
+* jeremie for creating github repo
+* kate for providing writing help and moral support
 
 \section*{Ethics}
 * assignments used in the course were used by the executive decision of Professor Weinberg,
