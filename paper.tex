@@ -163,7 +163,7 @@ Furthermore, by constructing new instances of the student implementations betwee
 However, several default Java behaviors do not map cleanly onto the desired properties of strategy design exercises.
 For instance, Java objects used as function parameters are passed by mutable, nullable reference.
 This is in contrast to functional languages (including Ocaml and Rust), where parameters are immutable and not null unless otherwise explicitly specified.
-Current industry standards for Java code obviate both of these issues using modern language features.\footnote{https://github.com/google/guava/wiki/UsingAndAvoidingNullExplained}\footnote{https://github.com/google/guava/wiki/ImmutableCollectionsExplained}\footnote{https://docs.oracle.com/javase/7/docs/api/java/util/Collections.html#unmodifiableList(java.util.List)}
+Current industry standards for Java code obviate both of these issues using modern language features.\footnote{https://github.com/google/guava/wiki/UsingAndAvoidingNullExplained}\footnote{https://github.com/google/guava/wiki/ImmutableCollectionsExplained}\footnote{https://docs.oracle.com/javase/7/docs/api/java/util/Collections.html\#unmodifiableList(java.util.List)}
 In order to preserve backwards compatibility, these features are not implemented by default.
 Where possible, I have taken advantage of these features.
 Since the assignment specification documents that students are required not to modify parameters, instructor code can use unmodifiable (immutable) containers.
@@ -250,43 +250,112 @@ This illustrates potential variation in data collection code as enabled by my mo
     }
 \end{verbatim}
 
-now we can also have a better handout
-outline better handout
-* interface
-* dumb implementation
-* full copy of the above code
-comment on use of formatbase here
-comment on separate files for each assignment - why (simplify handout)
+Given all of the components described above, I have developed a considerably improved the assignment handout.
+Previously, the handout contained the strategy interface and a simple implementation strategy with a sample testing method for that implementation only.
+This semester, assignment handouts contained not just the strategy interface and simple implementation, but also a full copy of the above game round simulation, complete with amortization by many randomized trials, which simply prints the average score of each strategy.
+This testing code is not hard-coded to any implementation of the student strategy interface, but instead can be configured by the student modifying the configuration file to contain whatever strategies they want to simulate.
+For instance, given strategies \texttt{Student\_random.java} and \texttt{Student\_favorites.java} which apply to random schools and their favorite schools in the above college admissions simulation, all the student would need to do to simulate 10 submissions using the former strategy and 15 using the latter would be set the configuration file to ten lines of \texttt{random} and 15 lines of \texttt{favorites}, and then run \texttt{make test}.
+The handout will rewrite the simulation code to simulate those strategies using \texttt{formatBase.py} and then compile and run the simulation.
 
-but we wanted a grader. how to build grader from that?
-brief tangent to how to grade, not against peers
-introduce replacement-comparison grading
-* have some instructor strategies designed to perform well
-* substitute, for each student, a copy of each instructor strategy
-* grade based on how many instructor strategies the student's strategy did better than against the same pool
-* comment about incentive structures of this method: correct due to amortization (maximize your expectation to maximize your chance of beating unknown instructor thresholds. amortization means your outcome equals your expectation)
+The two most important components of each exercise are the handout code for the students and the autograder code for the instructors.
+However, in order to design the autograder, Professor Weinberg and I had to develop a well-specified, portable standard for grading strategy design exercises.
+A key constraint in the grading of these assignments is that the incentive for the students must be to try to maximize their own strategy's performance.
+Therefore, curving each student's grade based on the percentile of their strategy's performance is not acceptable: in this scenario, a student would be as happy to hurt their peers as to improve their own strategy.
+For instance, in an iterated prisoner's dilemma, if students are graded based on relative performance, then they are apathetic between both cooperating and both defecting.
+So there is no incentive under any circumstance to cooperate, even in the face of potentially irrational counterparties, and every student should always defect.
 
-issue with this: O(mn) time
-* can cut down to O(m) time by just adding each instructor strategy one by one and seeing how they do against the whole field.
-* assume that each individual student has negligible impact on that instructor's performance.
-* Comment as to whether this is a realistic assumption.
-* comment on incentives of this method - approximately correct as before
+One feasible grading strategy, given this constraint, would be to grade student performance without any curve at all.
+That is, in a simulation where the best possible performance is 5000 points, and the worst possible performance is 0 points, students would receive 3/5 on the assignment if they scored 3000 points on average.
+However, in this case, student grades can be negatively impacted by the decisions of their peers.
+For instance, in the prisoner's dilemma, for every student who always defected, every other student would have the cap on the maximum possible grade they could receive lowered.
+Students' grades would be dominated not by the performance of their own strategy but by the decisions of their peers.
+Course staff including Professor Weinberg agreed that this is unacceptable.
 
-back to buidling the grader
-manually write the list of grader strategies
-make a new method very similar to one each trials: with extra trials
-lookup table: how many instructor strategies beat -> score
-didn't need to change the trial at all
-so that doesn't need to be changed when makign a new assignment
-we can now grade every assignment
+``Replacement-comparison grading'', the grading rubric used in the course, was developed by Professor Weinberg and myself as a dependency of my work on this project, created to satisfy the need for an incentive-correct grading rubric which could be implemented in an autograder.
+It is based on the following intuition: the performance of a student strategy $S_i$ among strategies $S_1 \ldots S_n$, pro-rated based on the potential best and worst possible performances by any strategy in the simulation, can be captured by comparing the score $x_i$ of $S_i$ against $S_1 \ldots S_{i-1}, S_{i+1} \ldots S_n$ to the scores $y_{i,1} \ldots y_{i,m}$ of a predetermined menagerie of $m$ instructor strategies $I_1 \ldots I_m$, where each $y_{i,j}$ in $y_{i,1} \ldots y_{i,m}$ is the score of $I_j$ against $S_1 \ldots S_{i-1}, S_{i+1} \ldots S_n$.
+That is, to grade a given student's strategies in a room with their peers, substitute each instructor in their place while making no other changes to the room, and measure whether the student does better or worse than that instructor would have in their place.
+Students whose strategies outperform all instructor-designed strategies have done better than the instructors would have at the assignment, and receive the best grades.
+Some instructor-designed strategies are intentionally imperfect or misguided, in order to differentiate between less ideal student-designed strategies.
+
+The grading strategy described above has the correct incentives: each student will attempt to maximize their chance of beating each instructor threshold.
+Since the instructor strategies used for grading are not revealed, and the pool of other student submissions is unpredictable, the distribution of instructor thresholds approaches uniform, and students will attempt to beat as much of the real interval of the score range as possible, which is the same behavior as maximizing expectation.
+Additionally, by amortizing student performance over many randomized trials, for instance by reassigning student and university preference orderings in the college applications game independently between trials, the law of large numbers guarantees to students that their grade represents their expected performance without uncertainty based on variance between trials.
+So students are not incentivized to play a lower-expectation strategy in order to increase their variance, or any other higher-order moment of their strategy.
+The only concern would be if a student `played mean' to hurt instructor scores, but since instructor scores for a given student are calculated without the play of this student, students could not improve their own grade by doing so.
+
+Though the above strategy achieves all the correctness requirements, it has a fatal flaw: when there are $n$ student strategies and $m$ instructor strategies, and a trial with $n$ strategies takes $t(n)$ time, this grading metric takes $O(m \cdot n \cdot t(n))$ time.
+After approval from Professor Weinberg, I implemented a simple optimization to bring down the time requirement to $O((m+1) \cdot t(n+1))$ time.\footnote{So long as $t$ grows slower than $n! $, this is a performance improvement; for practical reasons, all simulations used in this course take polynomial time in the number of students.}
+The modified replacement-comparison grading scheme measures student scores $x_1 \ldots x_n$ for all students $S_1 \ldots S_n$ amortized across many trials, then for each instructor strategies $I_j$ among $I_1 \ldots I_m$, measures their score $y_j$ against all of $S_1 \ldots S_n$.
+That is, instructor strategies are assigned scores based on their performance against all the students, and student strategies are assigned scores based on their performance against all the other students.
+The only difference between the initial and modified replacement-comparison schemes is that each student can have some small impact on the thresholds used to grade them, not just their peers.
+Thus, if a student `played mean' and hurt instructor scores, they might perform better.
+However, among a course of over 100 students, the impact of any individual student on any instructor's score is assumed to be negligible.
+The strength of this assumption needs to be verified during the development of an assignment.
+
+The goal of this project is not to build a handout, or an autograder, but to build a framework in which the development of the grader as described above requires no modification of assignment-specific code.
+Consider the components of the simulation handout:
+\begin{itemize}
+\item \texttt{runTrial} method which takes a list of strategies and simulates their behaviors in e.g.\ a college admissions simulation
+\item data processing methods, e.g.\ \texttt{oneEachTrial} which builds a list containing each configuration-specified strategy once\footnote{see figure above} and \texttt{oneEachTrials} (not shown above) which runs \texttt{oneEachTrial} a large number of times and averages the results
+\item postprocessing methods, e.g.\ to output a CSV file containing student names and their average performance in the simulation
+\end{itemize}
+Only the first of these contains assignment-specific code.
+In order to implement replacement-comparison grading, I implemented the following methods:
+\begin{itemize}
+\item two new data processing methods, \texttt{withExtraTrial} which builds a list containing each configuration-specified strategy once, and one extra strategy passed in as a parameter\footnote{see figure above}, and a corresponding method \texttt{withExtraTrials} which averages the above. These are very similar to the existing data processing methods.
+\item A new postprocessing method that computes grades for each student given how many instructor strategies each student strategy beat and a lookup table.\footnote{make into figure/appendix}
+\end{itemize}
+\begin{verbatim}
+    public static void writeGrades () {
+        final int numTrials = 1;
+        //R netids[{0}] = "{netID}";//
+        // defaults as specified in assignment handout PDF
+        final double S = 100, T = 100, W = 10;
+        // Compute x_i
+        double[] oneEachTrials = oneEachTrials(100, S, T, W);
+
+        // Instructor strategies
+        List<Class<? extends Student>> ourStrats =
+            new ArrayList<Class<? extends Student>>();
+        ourStrats.add(Student_REDACTED.class);
+        // a total of twelve such lines like the above line
+        double[] winsToPoints = new double[]{
+            0, 0.5, 1.0, 1.2, 1.5, 1.8, 2, 3, 3.5, 4.0, 4.5, 4.8, 5
+        };
+        // Compute \sum_j \delta_{x_i > y_j} for all i
+        int[] wins = new int[N];
+        for (Class<? extends Student> strat : ourStrats) {
+            double[] res = withExtraTrials(strat, numTrials, S, T, W);
+            for (int i = 0; i < N; ++i) {
+                if (res[i] > res[N]) {
+                    ++wins[i];
+                }
+            }
+        }
+        // Output grades as csv
+        System.out.println("netID,points");
+        for (int i = 0; i < N; ++i) {
+            System.out.println(netids[i] + "," + Double.toString(oneEachTrials[i])
+                               + "," + Double.toString(winsToPoints[wins[i]]));
+        }
+    }
+\end{verbatim}
+Given only these two changes, the handout code has been transformed into an autograder.
+Additionally, neither of these changes required alteration of the \texttt{runTrial} method, so minimal additional work (only filling in the instructor strategy names and scoring rubric) is necessary for grading an assignment once the handout has been made.
+
+so now we have a framework which makes it easy to build new assignments
+what really changes?
+build ultimatum
+\footnote{TODO UML outline for reference}
 
 catch: sometimes we want to simulate multiple parameter settings for student code
 involves changing the main method a bit
 not much change
 
-so now we have a framework which makes it easy to build new assignments
-what really changes?
-build ultimatum
+As currently implemented, each assignment was distributed as a standalone zip file through the course website.
+Thus, even though very little code was changed between the two assignments described above,
+more convenient in cases where minor grader tweaks are sadly necessary
+comment on separate files for each assignment - why (simplify handout)
 
 we also have a framework to build new tools
 let's build new tools
