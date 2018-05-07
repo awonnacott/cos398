@@ -435,6 +435,8 @@ As the goals of a project naturally define evaluation criteria, I have evaluated
   \item list resources created
   \item polling data about student usage
   \item empirical results about student error rates
+    ``Illegal submissions'' constitute student strategies which do not compile, throw exceptions, violate assertions, or otherwise behave outside of the parameters of the simulation.\footnote{Poorly performing strategies which obey the specification are legal.}
+    The illegal submission rate measures the percentage of students who were unable to develop a quality strategy for reasons other than lack of mastery of the course content.
   \end{itemize}
 \item create institutional memory and decrease year-to-year rewriting
   \begin{itemize}
@@ -448,27 +450,33 @@ As the goals of a project naturally define evaluation criteria, I have evaluated
 
 %Thus, quantitative metrics, including software failure rates and instructor time usage, and qualitative metrics, including student and instructor satisfaction, both illustrate the improvements to the course and emphasize the importance of quality tooling to quality programming-based assignments.
 
-\section*{Conclusions}
-Through this work, I aim to improve the quality of computer science theory education, from the perspectives of both the students and faculty associated with COS 445.
+\section*{Conclusions and Future Work}
+Through this work, my goal has been to improve the quality of present and future computer science theory education, from the perspectives of both the students and faculty associated with COS 445.
 
-prisoner's dilemma + search auctions
+Student and instructor feedback indicates that my work has supported high quality strategy design exercises in the current, Spring 2018, offering of COS 445.
+Ease of development and grading of the later assignments in the course confirms that I made substantial progress in simplifying and automating the instructor experience.
+Low rates of illegal student submissions confirm that my work has allowed students to focus on core assignment content without experiencing undue difficulties with assignment structure or available tooling.
+I have achieved my goals in the present time-frame.
 
-%The goal of this project is to discover to what degree the development of new strategy design exercises can be simplified or automated, to improve the student resources available during the completion of these exercises, and to create institutional memory and decrease year-to-year repetition of the same work.
+I intend to continue to use these tools as a returning undergraduate course assistant when this course is taught in Spring 2019.
+However, I will graduate at the end of that semester and will be unavailable in subsequent offerings of COS 445.
+I cannot yet measure my success at preventing this work from being repeated in any future year, but Professor Weinberg has confirmed that these resources will be provided to future course staff tasked with operating the strategy design exercises.
 
 %the "programming assignments" aren't really about your ability to code. They are about placing the theoretical results from the course in context. They create a scenario in which mastery of theoretical results from the course content is demonstrated by making and justifying real-world decisions.
 
-\section*{Future Work}
+In Spring 2019, while reusing these resources, I will further simplification and automation is supported within the existing framework as I am able.
+While currently assignments are distributed independently, so no code may be shared between assignments, I will revise the assignments to share one implementation of the handout post-processor and auto-grader post-processor.
+This will complicate the assignment handout process slightly, but will simplify code reuse and iteration.
+Earlier assignments were built off of earlier versions of the infrastructure and will need to be modified where they differ from newer versions when they are reused, and sharing code between assignments will prevent this inconsistency from developing again.
 
-Some of the implementations of my infrastructure could be simplified using ClassLoaders, which would replace some of the Python code.
-This improvement was inspired by the implementation of ClassLoaders in the Spring 2014 student handout code.
+Recently, I became aware of a Java interface for loading classes at runtime.
+This technology, called ClassLoader,\footnote{https://docs.oracle.com/javase/9/docs/api/java/lang/ClassLoader.html} was implemented in the Spring 2014 handout code.
+I was unable to use ClassLoaders initially because I did not gain access to the Spring 2014 code until later in the semester.
+This simple modification will eliminate Python dependency currently required by \texttt{formatBase.py} and allow students to better understand and modify handout simulation code.
 
-would like to not use separate files even if lots of the code is the same --- complicates handout but simplifies code reuse and iteration
-
-Earlier assignments were built off of earlier versions of the infrastructure and will need to be ported to newer versions when they are reused: do next year
-
-will be reused in two years without my oversight
-
-other universities? matt through academic connections
+Though few other universities currently teach courses in algorithmic game theory as undergraduate computer science, the field is growing and such courses will inevitably become more common.
+As they do, they will look to COS 445 for resources, along with Stanford CS 269I, C.M.U.\ 15--196, and Harvard CS 136.
+It is my hope that my code could be understood and assigned such courses, with modification to suit the topics covered.
 
 \section*{Acknowledgements}
 First of all, I would like to thank Professor Weinberg for his leadership in designing the written specifications and grading rubrics for the strategy design exercises, and for his dedication to teaching and organizing COS 445.
