@@ -44,8 +44,15 @@ My work builds upon existing programming-based game theory exercises assigned in
 The intention of these strategy design exercises is to teach students how to use game theory to analyze a real world situation and work rationally within a healthy incentive structure where students do not try to hurt each others’ performance.
 Each past offering of the course has rebuilt these assignments, and all associated instructor tooling, from scratch, resulting in unnecessarily high allocation of instructor time to grading.
 Additionally, the course has grown rapidly to become the single largest theoretical computer science course ever taught at Princeton.\footnote{registrar data here}\footnote{More students complete COS 340 in a given year, but it is taught in both fall and spring semesters.}
-In order to eliminate unnecessary annual replication of previous coursework development, improve course performance at scale, and improve the course experience for students, I developed an extensible framework to improve these strategy design exercises.
 
+The goals of this project are to discover to what degree the development of new strategy design exercises can be simplified or automated, to improve the student resources available during the completion of these exercises, and to create institutional memory and decrease year-to-year repetition.
+This was accomplished by designing a modular, extensible, and reusable framework which embodies the commonality between strategy design exercises, allowing instructors to create new exercises while changing only the necessary, assignment-specific details, and to develop advanced automated grading tools than previously existed for the course.
+Within this framework, I have built a collection of utilities to facilitate students' evaluation of their own strategies and to decrease strategy iteration overhead.
+
+Through this work, I aim to improve the quality of computer science theory education from the perspectives of both the students and faculty associated with COS 445.
+Quantitative metrics, including software failure rates and instructor time usage, and qualitative metrics, including student and instructor satisfaction, both illustrate the improvements to the course and emphasize the importance of quality tooling to quality programming-based assignments.
+
+\section*{Problem Background}
 Four Princeton University departments offer courses in game theory: Economics, Politics, Mathematics, and Computer Science.
 While all of these courses teach the core concepts of game theory, each also connects this core to relevant examples and topics in its department.
 For instance, the Computer Science department's ``Economics and Computing'' places emphasis on the connections between game-theoretic results and algorithms, software, and other aspects of computer science.
@@ -72,13 +79,7 @@ While the strategy design exercises assignments are popular with students\footno
 Worse still, due to course staffing changes, this work has not been preserved between semesters, resulting in inefficient allocation of department resources to producing new exercises without the institutional memory or software resources previously developed.
 Due to the limited tooling provided in past semesters for students to test their code, many submissions did not compile or caused runtime exceptions, requiring considerable additional instructor resources.
 
-%TODO: move the above into the body / approach and the above as the introduction
-The goals of this project are to discover to what degree the development of new strategy design exercises can be simplified or automated, to improve the student resources available during the completion of these exercises, and to create institutional memory and decrease year-to-year repetition.
-This was accomplished by designing a reusable framework which embodies the commonality between strategy design exercises, allowing instructors to create new exercises while changing only the necessary, assignment-specific details, and to develop advanced automated grading tools than previously existed for the course.
-Within this framework, I have built a collection of utilities to facilitate students' evaluation of their own strategies and to decrease strategy iteration overhead.
-
-Through this work, I aim to improve the quality of computer science theory education from the perspectives of both the students and faculty associated with COS 445.
-Quantitative metrics, including software failure rates and instructor time usage, and qualitative metrics, including student and instructor satisfaction, both illustrate the improvements to the course and emphasize the importance of quality tooling to quality programming-based assignments.
+% the "programming assignments" aren't really about your ability to code. They are about placing the theoretical results from the course in context. They create a scenario in which mastery of theoretical results from the course content is demonstrated by making and justifying real-world decisions.
 
 \section*{Related Work}
 This work was developed to replace previous software design exercises assigned to COS 445 students\footnote{including the author} in Spring 2017.\footnote{https://web.archive.org/web/20170916042726/https://www.cs.princeton.edu/~smattw/Teaching/cos445sp17.htm}
@@ -461,8 +462,6 @@ I have achieved my goals in the present time-frame.
 I intend to continue to use these tools as a returning undergraduate course assistant when this course is taught in Spring 2019.
 However, I will graduate at the end of that semester and will be unavailable in subsequent offerings of COS 445.
 I cannot yet measure my success at preventing this work from being repeated in any future year, but Professor Weinberg has confirmed that these resources will be provided to future course staff tasked with operating the strategy design exercises.
-
-%the "programming assignments" aren't really about your ability to code. They are about placing the theoretical results from the course in context. They create a scenario in which mastery of theoretical results from the course content is demonstrated by making and justifying real-world decisions.
 
 In Spring 2019, while reusing these resources, I will further simplification and automation is supported within the existing framework as I am able.
 While currently assignments are distributed independently, so no code may be shared between assignments, I will revise the assignments to share one implementation of the handout post-processor and auto-grader post-processor.
