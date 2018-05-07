@@ -13,6 +13,8 @@
 \usepackage{appendix}
 \usepackage{titling}
 
+\usepackage{fancyvrb}
+
 \usepackage{minted}
 \setminted{baselinestretch=1}
 
@@ -185,11 +187,11 @@ While I was initially inclined to pursue implementation in Java, I spent conside
 This was necessary because I would incur a considerable cost to myself and to others ere I to change programming languages partway through the semester.
 I would have to rebuild all previous work, and I would inconvenience all the students of COS 445 by making them change languages and wasting their time learning the abandoned language.
 
-Many students suggested the assignments be implemented in Python,\footnote{TODO: per survey 1 results} and this would be preferred by the course staff as well.
+Many students suggested the assignments be implemented in Python~\cite{survey12, survey34}, and this would be preferred by the course staff as well.
 Members of the Mechanism Design group are not expected to have working proficiency with Java, but many have enough experience with Python to support students.
 Additionally, Python's conciseness and ability to load classes from user input would be useful when implementing tools which are parameterized on user-input strategy names.
 Unfortunately, COS 445's prerequisite courses only provide Java experience, and not Python experience, so students reasonably expect they will only be asked to write Java code.
-Data from other course surveys indicate that 90\% of students report themselves fluent in Java after the Princeton introductory sequence, compared to 30\% for Python, confirming that the student work for the assignment must be in Java.\footnote{TODO: COS 333 survey data}
+Data from other course surveys (Appendix~\ref{appendix:cos333sp17}, Appendix~\ref{appendix:cos333sp18}) indicate that 90\% of students report themselves fluent in Java after the Princeton introductory sequence, compared to 30\% for Python, confirming that the student work for the assignment must be in Java.
 Given this constraint, and lacking any other language selection pressures, I elected to implement as much of the assignment code as possible in Java, with limited usage of scripting languages such as Python, Bash, and GNU Make.
 These scripting languages were used only where Java would not suffice and only where implementation details were irrelevant to student assignment comprehension.
 
@@ -458,36 +460,48 @@ These assignments and the framework I developed are documented and available at 
 Thus, they will be available for reuse in future offerings of the course.
 
 While I have been unable to experimentally determine whether my project will be reused, I have evaluated my successful achievement of each other goal.
-I have decreased the work to build each assignment within a semester and the instructor time allocated to assignment implementation, eliminated the inter-year assignment reconstruction, and improved available student resources
+I have decreased the work to build each assignment within a semester and the instructor time allocated to assignment implementation, eliminated the inter-year assignment reconstruction, and improved available student resources.
 These achievements have increased student and instructor satisfaction with the strategy design exercises.
 
 My primary goal, which unifies my work and sets it apart from past work on this subject, has been to discover modularity and decrease assignment-to-assignment rewriting.
-\begin{itemize}
-\item code rewriting measurements between assignments
-\item instructor time usage
-\item extensibility:
-\end{itemize}
+As measured using \texttt{cloc}, development of the fourth strategy design exercise required only TODO\% of the code be modified from previous assignments~\cite{s18}.\footnote{TODO lines of code be changed out of TODO lines of code total assigned or graded.}
+As illustrated in Figure~\ref{fig:instructortime}, which shows each assignment from Spring 2018 in chronological order, instructor time usage dropped radically with each exercise, demonstrating the benefits of modular design.\footnote{This data is exaggerated by the overhead of modularization and includes time spent on framework development where that was a direct dependency of instructor work.}
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.75\linewidth]{instructortime.png}
+  \caption{Instructor time usage dropped radically as my framework was deployed. (Table~\ref{table:time})}\label{fig:instructortime}
+\end{figure}
 
 I have also succeeded at leveraging the extensibility of my project to improve student resources.
+As measured using \texttt{cloc}, the ``Check Submit'' button required 28 lines of code and the leaderboard required 34 lines of code to implement~\cite{s18}, representing roughly 15\% each of the size framework developed previously.
+With these remarkably simple extensions, student performance improved dramatically.
+``Illegal submissions'' constitute student strategies which do not compile, throw exceptions, violate assertions, or otherwise behave outside of the parameters of the simulation.\footnote{Poorly performing strategies which obey the specification are legal.}
+The illegal submission rate measures the percentage of students who were unable to develop a quality strategy for reasons other than lack of mastery of the course content.
+As shown in Figure~\ref{fig:illegal}, the illegal submission rate dropped from over 20\% to just one or two strategies per assignment as the extensions I had developed were deployed.\footnote{The leaderboard and ``Check Submit'' button were first available for Ultimatum.}
 
-\begin{itemize}
-\item list resources created
-\item polling data about student usage
-\item empirical results about student error rates
-  ``Illegal submissions'' constitute student strategies which do not compile, throw exceptions, violate assertions, or otherwise behave outside of the parameters of the simulation.\footnote{Poorly performing strategies which obey the specification are legal.}
-  The illegal submission rate measures the percentage of students who were unable to develop a quality strategy for reasons other than lack of mastery of the course content.
-\end{itemize}
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.75\linewidth]{illegal.png}
+  \caption{Illegal submission rate dropped as my extensions were deployed. (Table~\ref{table:illegal})}\label{fig:illegal}
+\end{figure}
+
+Student polling data gathered at multiple points during the semester confirms that student engagement with newly released tools coincided with decreased rates of illegal submissions.
+After the first two strategy design exercises, during which only the handout was provided, 68 of 74 respondents (out of 142 enrolled students) reported having used the handout to test their strategies~\cite{survey12}.
+TODO student usage 34
 
 Through this work, I have improved student and instructor experiences.
 In addition to the data gathered above, I verified this achievement by surveying the current students of COS 445 under the supervision of Professor Weinberg.
-\begin{itemize}
-\item polling data about student usage
-\end{itemize}
+In addition to usage data referenced above, survey respondents also evaluated their subjective rating for how useful the provided framework was in the design of their strategies.
+TODO student rating 12 34
 
-% What are your thoughts on how well the strategy design exercises have gone this year? Specifically, I'm interested in your satisfaction with the implementations and software, and the amount of instructor time and frustration spent.
+In order to evaluate instructor experiences, I reached out to Professor Weinberg for comment:
+\begin{displayquote}
+Andrew: What are your thoughts on how well the strategy design exercises have gone this year? Specifically, I'm interested in your satisfaction with the implementations and software, and the amount of instructor time and frustration spent.
 
-% ** significantly** improved instructor involvement.
-% I didn't actually touch any of the software directly, so I don't know how to comment on that. But I felt like the challenges mostly ran themselves. We talked briefly to set it up. We talked briefly to decide how to grade, and I didn't have to answer any technical questions for students in between
+Professor Weinberg: We have \textbf{significantly} improved instructor involvement. I didn't actually touch any of the software directly, so I don't know how to comment on that. But I felt like the challenges mostly ran themselves. We talked briefly to set it up. We talked briefly to decide how to grade, and I didn't have to answer any technical questions for students in between.
+\end{displayquote}
+My own experience an undergraduate course assistant using the framework I have developed in this work corroborates this claim: this project has led to better course experiences for all involved.
 
 \section*{Conclusions and Future Work}
 Through this work, my goal has been to improve the quality of present and future computer science theory education, from the perspectives of both the students and faculty associated with COS 445.
@@ -628,7 +642,7 @@ if __name__ == "__main__":
 
   \newpage
   \section{\texttt{students.csv} provides an example configuration for \texttt{formatBase.py}}\label{appendix:students}
-\begin{verbatim}
+\begin{Verbatim}
 netID
 random
 random
@@ -655,7 +669,164 @@ favorites
 favorites
 favorites
 favorites
-\end{verbatim}
+\end{Verbatim}
+
+\newpage
+\section{COS 333 Spring 2017 Survey Data}\label{appendix:cos333sp17}
+Thanks to Professor Kernighan for providing my independent work seminar with this data.
+\begin{Verbatim}[fontsize=\scriptsize]
+181 responses
+Class
+ 2017 10
+ 2018 89
+ 2019 82
+Major
+ COS 148        ELE 12         ORF 4          WWS 2          MAT 2          ECO 2         
+ SPA 1          POL 1          PHI 1          HIS 1          GER 1          AST 1         
+ ARC 1          AB 1           A.B. 1        
+Certificate  23
+Course
+ C217 178       C226 175       C126 161       C326 36        C318 21        C461 8        
+ C418 1         C320 1        
+Fluent
+ Java 133       C 61           Python 32      Javascript 17  HTML 9         OCaml 6       
+ Matlab 6       R 5            Swift 4        English 4      CSS 4          C++ 4         
+ C# 4           PHP 3          Verilog 2      Ruby 2         Assembly 2     X86-64 1      
+ TypeScript 1   Scala 1        SQL 1          SCSS 1         Perl 1         Ofcourse 1    
+ NodeJavascrip  Haskell 1      Greek 1        ChucK 1       
+Cope:
+ Python 41      C 37           HTML 24        Javascript 17  Java 15        CSS 13        
+ OCaml 12       Matlab 10      C++ 10         PHP 9          Ruby 8         C# 8          
+ Swift 7        Verilog 6      SQL 6          R 6            MySQL 3        Assembly 3    
+ x86-64 2       VB 2           Rails 2        Perl 2         Go 2           Fortran 2     
+ 3 1            x86 1          up 1           seem 1         regular 1      only 1        
+ not 1          most 1         mark 1         little 1       learn 1        languages 1   
+ iOS-Swift 1    extremely 1    but 1          bit 1          X86 1          WebGL 1       
+ VBA 1          Scheme 1       SCSS 1         Rust 1         React-Native   React 1       
+ OpenGL 1       Objective 1    N 1            Lisp 1         LaTeX 1        I 1           
+ Haskell 1      Common 1       Coffeescript   Clojure 1      Can 1          Bash 1        
+ Arabic 1       Android 1      AVR 1          AMPL 1         - 1           
+More:
+ Python 42      Javascript 33  Ruby 23        C++ 22         Swift 20       SQL 17        
+ PHP 17         HTML 16        Go 14          CSS 9          Perl 5         Haskell 5     
+ C# 5           C 5            Scala 4        iOS 3          Rust 3         Objective 3   
+ OCaml 3        languages 2    functional 2   else 2         anything 2     React 2       
+ MySQL 2        Lisp 2         Erlang 2       Clojure 2      Android 2      what's 1      
+ web 1          to 1           them 1         or 1           often 1        of 1          
+ mobile 1       maybe 1        lot 1          language? 1    know 1         jQuery 1      
+ in 1           front-end 1    for 1          everything 1   especially 1   emacs 1       
+ else. 1        don't 1        dev 1          css 1          app 1          Super 1       
+ Solidity 1     Scripts 1      R 1            Prolog 1       Or 1           Open 1        
+ Objective-C 1  Not 1          NodeJavascrip  Mongo 1        Mobile 1       Maybe 1       
+ Matlab 1       Lua 1          Julia 1        JQuery 1       Idris 1        IOS 1         
+ I 1            FORTRAN 1      F# 1           Everything 1   Dev 1          D 1           
+ Coq 1          CoffeeScript   Chinese 1      Arabic 1       App 1          Any 1         
+ All 1          .NET 1        
+Unix      48  37  59  34
+Win       86  35  40  16
+Mac       78  25  45  30
+iOS      126  25  21   5
+Android  107  40  25   7
+Win 55, Mac 134, Linux 12
+iPhone 126, Android 55, Other 0
+181 responses
+\end{Verbatim}
+
+\newpage
+\section{COS 333 Spring 2018 Survey Data}\label{appendix:cos333sp18}
+Thanks to Professor Kernighan for providing my independent work seminar with this data.
+\begin{Verbatim}[fontsize=\scriptsize]
+Names 103
+2018 14
+2019 25
+2020 64
+ 103
+Majors:
+   cos 82
+   ele 6
+   orf 5
+   phy 2
+   mae 2
+   eco 2
+   mol 1
+   mat 1
+   geo 1
+   ast 1
+Certif 17
+126 93
+217 100
+226 102
+318 2
+320 
+326 11
+418 3
+425 
+435 1
+436 
+461 12
+Unix    lots 13 some 55 little 22 none 12
+Win lots 19 some 32 little 16 none 33
+MacOSX  lots 20 some 29 little 14 none 39
+iOS lots 7 some 11 little 16 none 67
+Android lots 8 some 14 little 24 none 54
+PCwin 42
+PClinux 9
+PCmac 66
+iPhone 64
+Android 40
+other 0
+Fluent
+   java 91 c 67 python 29 javascript 8 c++ 8 r 7 matlab 6 html 6 ocaml 4
+   css 4 react 3 swift 2 asm 2 wolfram 1 verilog 1 stata 1 sql 1 scala 1
+   ruby 1 php 1 objective-c 1 native 1 latex 1 julia 1 jquery 1 fortran 1
+   bash 1
+Cope
+   python 35 c 30 javascript 21 r 12 c++ 12 java 11 matlab 9 html 9 sql 6
+   ocaml 6 php 5 css 5 swift 4 go 3 asm 3 verilog 2 ruby 2 objective-c 2
+   lua 2 c# 2 xml 1 throwback 1 stata 1 scala 1 roughly 1 rails 1 other 1
+   mysql 1 know 1 julia 1 i 1 haskell 1 fortran 1 f# 1 c#.net 1 at&t 1
+   ample 1 VB 1 64 1
+More
+   javascript 38 python 37 c++ 22 html 17 sql 14 ruby 11 go 11 swift 8
+   css 8 c# 7 scala 5 react 3 perl 3 haskell 3 web 2 php 2 other 2 c 2
+   them 1 stack 1 rust 1 reactjavascript 1 rails 1 r 1 others 1 of 1
+   ocaml 1 objective-c 1 native 1 mysql 1 my 1 missing 1 mean 1 matlab 1
+   many 1 list 1 latex 1 languages 1 kotlin 1 java 1 is 1 ios 1 http 1
+   html5 1 hadoop 1 golang 1 git 1 from 1 frameworks 1 experience 1
+   everything 1 etc.  1 essential 1 else 1 databases 1 clojure 1 awk 1
+   application 1 android 1
+\end{Verbatim}
+
+\newpage
+\section{Data Tables}\label{appendix:tables}
+
+\begin{table}[!h]
+  \centering
+  \begin{tabular}{l|c c c}  & Design& Build& Grade\\
+    \hline
+    1. Matching& 5& 15& 20\\
+    2. Election& 5& 10& 15\\
+    3. Ultimatum& 5& 5& 5\\
+    4. Auction& 5& 1.5& 5
+  \end{tabular}
+  \caption{Instructor time usage per assignment (hours)}\label{table:time}
+\end{table}
+This data is approximate and based on revision logs reviewed later in the semester.
+Instructor time usage for early assignments includes framework development not performed by course staff where that work was necessary for the completion of the assignment development and grading.
+
+\begin{table}[!h]
+  \centering
+  \begin{tabular}{l|c c c} & Compile Error& Runtime Error& None\\
+    \hline
+    1. Matchings& 9& 12& 61\\
+    2. Elections& 4& 6& 70\\
+    3. Ultimatum& 2& 0& 75\\
+    4. Auction& 0& 1& 75
+  \end{tabular}
+  \caption{Incidence of illegal submissions per assignment}\label{table:illegal}
+\end{table}
+I accessed this data in my role as an undergraduate course assistant and received Professor Weinberg's approval to include it in this paper.
+
 \end{appendices}
 \end{document}
 
