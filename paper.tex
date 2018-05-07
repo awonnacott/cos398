@@ -6,6 +6,9 @@
 \newcommand{\IWreport}{2018}
 \newcommand{\quotes}[1]{``#1''}
 
+\usepackage{appendix}
+\usepackage{titling}
+
 \usepackage{minted}
 \setminted{baselinestretch=1}
 
@@ -20,31 +23,34 @@
   A Modular Framework for Developing, Deploying, and Evaluating Game-Theoretic Strategy Design Exercises
 }
 
-\author{Andrew Wonnacott\\
-  Advisers: Professor Dave Walker, Professor Matt Weinberg}
+\author{
+  Andrew Wonnacott\\
+  Advisers: Professor Dave Walker, Professor Matt Weinberg
+}
 
 \date{}
 \maketitle
 
-\thispagestyle{empty}
 \doublespacing{}
-\begin{abstract}
-  Student interest in ``Economics and Computing'', Princeton's undergraduate computer science course in algorithmic game theory, has grown rapidly in recent years.
-  This course employs small simulations to develop students' ability to use theoretical tools to analyze more real-world situations.
-  These strategy design exercises require considerably more software infrastructure than a usual theoretical problem set would, including handout code for student self-evaluation and software auto-graders.
-  While some frameworks for automated grading exist, none surveyed provided the specific features desired for repeatedly developing very similarly-structured assignments and evaluating student submissions in the context of each other.
-  In order to facilitate more automated grading of these assignments in this and future semesters, I have developed a framework of modular, extensible tools for building all of the necessary components of these strategy design assignments.
-  Concurrently, in my role as a grader for COS 445, I used the framework to develop and evaluate four strategy design assignments, using assignment specifications developed with Professor Weinberg.
-  This provides feedback from real student and instructor users, which was then used to improve the auto-grader design.
-  Empirical results demonstrate the importance of quality tooling to effective use of instructor time, low broken submission rates, and high student satisfaction.
-\end{abstract}
 
-\newpage
+\begin{titlingpage}
+  \begin{abstract}
+    Student interest in ``Economics and Computing'', Princeton's undergraduate computer science course in algorithmic game theory, has grown rapidly in recent years.
+    This course employs small simulations to develop students' ability to use theoretical tools to analyze more real-world situations.
+    These strategy design exercises require considerably more software infrastructure than a usual theoretical problem set would, including handout code for student self-evaluation and software auto-graders.
+    While some frameworks for automated grading exist, none surveyed provided the specific features desired for repeatedly developing very similarly-structured assignments and evaluating student submissions in the context of each other.
+    In order to facilitate more automated grading of these assignments in this and future semesters, I have developed a framework of modular, extensible tools for building all of the necessary components of these strategy design assignments.
+    Concurrently, in my role as a grader for COS 445, I used the framework to develop and evaluate four strategy design assignments, using assignment specifications developed with Professor Weinberg.
+    This provides feedback from real student and instructor users, which was then used to improve the auto-grader design.
+    Empirical results demonstrate the importance of quality tooling to effective use of instructor time, low broken submission rates, and high student satisfaction.
+  \end{abstract}
+\end{titlingpage}
+
 \section*{Introduction}
 My work builds upon existing programming-based game theory exercises assigned in Princeton's COS 445 ``Economics and Computing''.
 The intention of these strategy design exercises is to teach students how to use game theory to analyze a real-world situation and work rationally within a healthy incentive structure, e.g.\ one in which students do not try to hurt each others’ performance.
 Each past offering of the course has rebuilt these assignments, and all associated instructor tooling, from scratch, resulting in unnecessarily high allocation of instructor time to grading.
-Additionally, the course has grown rapidly to become the single largest theoretical computer science course ever taught at Princeton.\footnote{registrar data here}\footnote{More students complete COS 340 in a given year, but it is taught in both fall and spring semesters.}
+Additionally, the course has grown rapidly to become the single largest theoretical computer science course ever taught at Princeton.\footnote{More students complete COS 340 in a given year, but it is taught in both fall and spring semesters.}~\cite{coursesizes}
 
 The goals of this project are to discover to what degree the development of new strategy design exercises can be simplified or automated, to improve the student resources available during the completion of these exercises, and to create institutional memory and decrease year-to-year repetition.
 This was accomplished by designing a modular, extensible, and reusable framework which embodies the commonality between strategy design exercises, allowing instructors to create new exercises while changing only the necessary, assignment-specific details, by developing more advanced automated grading tools than previously existed for the course.
@@ -57,12 +63,12 @@ Quantitative metrics, including software failure rates and instructor time usage
 Four Princeton University departments offer courses in game theory: Economics, Politics, Mathematics, and Computer Science.
 While all of these courses teach the core concepts of game theory, each also connects this core to relevant examples and topics in its department.
 For instance, the Computer Science department's ``Economics and Computing'' places emphasis on the connections between game-theoretic results and algorithms, software, and other aspects of computer science.
-The course focuses on the relevance of game theory to matchings, auctions, cryptocurrencies, and other multi-actor computational systems.\footnote{https://www.cs.princeton.edu/~smattw/Teaching/cos445sp18.htm}
+The course focuses on the relevance of game theory to matchings, auctions, cryptocurrencies, and other multi-actor computational systems.~\cite{https://www.cs.princeton.edu/~smattw/Teaching/cos445sp18.htm}
 It is also represented in the design of the problem sets, which, in addition to traditional proof-based exercises, contain programming-based exercises which connect course topics to prerequisite computer science skills.
 These programming-based exercises take a common form.
 
 Students are presented with an iterated game, described both in the assignment handout and as a Java interface.
-A classic iterated game is the iterated prisoner's dilemma\footnote{Figure: PD game -> Java interface}, in which two players must collaborate to receive the best outcome and have access to the other player's previous decisions when making their own decision.
+A classic iterated game is the iterated prisoner's dilemma,\footnote{Figure: PD game -> Java interface} in which two players must collaborate to receive the best outcome and have access to the other player's previous decisions when making their own decision.
 Players balance the incentive to defect, which improves their own situation while damaging their opponent, with the knowledge that their opponent may defect in future rounds punish them if they defect now.
 While this game is well-studied and models some real-world incentive structures, the course also draws on various real-world phenomenon to design iterated games, including a college admissions game from the perspective of stable matchings, a search advertisement bidding game using auction theory, an election informed by voting theory, a gerrymandering-prevention simulation inspired by fair division, and exploitation of a fictional cryptocurrency by analyzing blockchain incentives.
 These examples are not exhaustive, but illustrate the variety of course topics with potential for translation to iterated games.
@@ -81,45 +87,45 @@ These strategy design exercises are intended to help students place theoretical 
 They create a scenario in which mastery of theoretical course content is demonstrated by making and justifying real-world decisions.
 Professor Weinberg's intent is that no student should experience difficulty implementing their strategy, and all of the challenge should come from developing a creative, successful strategy.
 
-While the strategy design exercises assignments are popular with students\footnote{https://reg-captiva.princeton.edu/chart/index.php?terminfo=1184\&courseinfo=012095 requires CAS login}, they also demand dedication of considerable instructor resources to building software for student handouts and strategy evaluation, which have historically been significantly rebuilt for each assignment.
+While the strategy design exercises assignments are popular with students~\cite{https://reg-captiva.princeton.edu/chart/index.php?terminfo=1184\&courseinfo=012095 requires CAS login}, they also demand dedication of considerable instructor resources to building software for student handouts and strategy evaluation, which have historically been significantly rebuilt for each assignment.
 Worse still, due to course staffing changes, this work has not been preserved between semesters, resulting in inefficient allocation of department resources to producing new exercises without the institutional memory or software resources previously developed.
-Due to the limited tooling provided in past semesters for students to test their code, many submissions did not compile or caused runtime exceptions, requiring considerable additional instructor resources.
+Due to the limited tooling provided in past semesters for students to test their code, many submissions did not compile or caused run-time exceptions, requiring considerable additional instructor resources.
 
 
 \section*{Related Work}
-This work was developed to replace previous software design exercises assigned to COS 445 students\footnote{including the author} in Spring 2017.\footnote{https://web.archive.org/web/20170916042726/https://www.cs.princeton.edu/~smattw/Teaching/cos445sp17.htm}
+This work was developed to replace previous software design exercises assigned to COS 445 students\footnote{including the author} in Spring 2017.~\cite{https://web.archive.org/web/20170916042726/https://www.cs.princeton.edu/~smattw/Teaching/cos445sp17.htm}
 In one problem set, students developed and implemented strategies for three different strategy design exercises related to three different abstract games: Prisoner's Dilemma, Centipede, and Ultimatum.
-In a later problem set, an exercise placed students in the role of bidders in a generalized second-price auction.\footnote{an auction of multiple items, one after another, where the winning bid pays the second highest bid. This is the auction format used by Google to sell sponsored search auctions.}
+In a later problem set, an exercise placed students in the role of bidders in a generalized second-price auction.\footnote{A G.S.P.\ auction is an auction of multiple items, one after another, where the winning bid pays the second highest bid. This is the auction format used by Google to sell sponsored search auctions.}
 
-Both problem sets were implemented and graded by Cyril Zhang\footnote{https://github.com/cyrilzhang}, a graduate student TA for the course.
-Zhang developed interfaces, dummy implementations, and grader software for each strategy design exercise.\footnote{https://github.com/PrincetonUniversity/cos445-hw/tree/s17 requires invite: contact author or department}
+Both problem sets were implemented and graded by Cyril Zhang~\cite{https://github.com/cyrilzhang}, a graduate student TA for the course.
+Zhang developed interfaces, dummy implementations, and grader software for each strategy design exercise.~\cite{https://github.com/PrincetonUniversity/cos445-hw/tree/s17 requires invite: contact author or department}
 However, his implementation of software for strategy design assignments was intended for grader use only.
 It is not modular and has to be completely rewritten for each assignment.
 The student interfaces were documented, but the grader software was not documented for future use.
 Additionally, some of the scripts and notebooks used by Zhang were not preserved and were not accessible as resources.
 Thus, while these resources served as inspiration for this work and provided some assignment-specific code to my work developing specific assignments, I did not build directly on Zhang's code.
 
-Prior to Spring 2017, COS 445 was taught by Professor Mark Braverman in Fall 2012 and Spring 2014\footnote{https://precourser.io/course/1184012095 requires Princeton CAS authentication}.
+Prior to Spring 2017, COS 445 was taught by Professor Mark Braverman in Fall 2012 and Spring 2014~\cite{https://precourser.io/course/1184012095 requires Princeton CAS authentication}.
 Though no documentation or archives of the course homepage from these semesters is available online or in the Internet Archive, I recovered some resources from the course account on the ``Cycles'' cluster of the Princeton Computer Science department and from the source code repositories used by the course staff.
-In both semesters, Yonatan Naamad,\footnote{https://github.com/ynaamad/} a former graduate student TA for the course, was responsible for software development.
+In both semesters, Yonatan Naamad,~\cite{https://github.com/ynaamad/} a former graduate student TA for the course, was responsible for software development.
 
-The only resources available from Fall 2012 were collected from the course Google Code repository.\footnote{https://code.google.com/archive/p/cos445-scripts/}
+The only resources available from Fall 2012 were collected from the course Google Code repository.~\cite{https://code.google.com/archive/p/cos445-scripts/}
 This repository contains incomplete Python skeleton code for a basic tournament of an unspecified game.
-I uploaded this code to the current course repository\footnote{https://github.com/PrincetonUniversity/cos445-hw/tree/f12 requires invite: contact author or department} but did not develop it further.
+I uploaded this code to the current course repository~\cite{https://github.com/PrincetonUniversity/cos445-hw/tree/f12 requires invite: contact author or department} but did not develop it further.
 
-The Spring 2014 iteration of the course was developed on a private GitHub repository.\footnote{https://github.com/ynaamad/cos445}
+The Spring 2014 iteration of the course was developed on a private GitHub repository.~\cite{https://github.com/ynaamad/cos445}
 Through a clone of this repository stored on Cycles, I discovered that the course had PHP and Java implementations of strategy design exercises for Prisoner's Dilemma and another auction setting.
 The Java code was the student handout, which contained strategy interfaces and some testing code.
 The testing code was not designed to be automated for grading and was not modular.
 It tested manually-entered strategies against each other, and assignment-specific details such as game structure and payoffs were integrated within the simulation code.
 As a design decision I dismissed the available PHP code, which was used for course grading, due to language unfamiliarity.
-These resources were uploaded to the current course repository,\footnote{https://github.com/PrincetonUniversity/cos445-hw/tree/s14 requires invite: contact author or department} but were not reused, in part because they were located and examined only when I was given access to the course site in order to deploy my project.
+These resources were uploaded to the current course repository,~\cite{https://github.com/PrincetonUniversity/cos445-hw/tree/s14 requires invite: contact author or department} but were not reused, in part because they were located and examined only when I was given access to the course site in order to deploy my project.
 
 Beyond COS 445 at Princeton, many universities have taught computer science courses in algorithmic game theory.
-However, a survey of several universities' courses, including courses at Harvard\footnote{https://beta.blogs.harvard.edu/k108875/}, Stanford\footnote{https://theory.stanford.edu/~tim/364a.html and https://theory.stanford.edu/~tim/f16/f16.html}, Cornell\footnote{https://www.cs.cornell.edu/courses/cs6840/2014sp/}, U.\ Washington\footnote{https://courses.cs.washington.edu/courses/cse522/05sp/}, Yale\footnote{https://zoo.cs.yale.edu/classes/cs455/fall11/}, U.\ Penn\footnote{https://www.cis.upenn.edu/~aaroth/courses/agtS15.html}, Georgia Tech\footnote{https://web.archive.org/web/20131002121909/https://www.cc.gatech.edu/\%7Eninamf/LGO10/index.html}, Carnegie Mellon\footnote{https://www.cs.cmu.edu/~arielpro/15896s16/index.html}, and Duke,\footnote{https://www2.cs.duke.edu/courses/spring16/compsci590.4/} identified only one other course with similarly-structured assignments.
+However, a survey of several universities' courses, including courses at Harvard~\cite{https://beta.blogs.harvard.edu/k108875/}, Stanford~\cite{https://theory.stanford.edu/~tim/364a.html}~\cite{https://theory.stanford.edu/~tim/f16/f16.html}, Cornell~\cite{https://www.cs.cornell.edu/courses/cs6840/2014sp/}, U.\ Washington~\cite{https://courses.cs.washington.edu/courses/cse522/05sp/}, Yale~\cite{https://zoo.cs.yale.edu/classes/cs455/fall11/}, U.\ Penn~\cite{https://www.cis.upenn.edu/~aaroth/courses/agtS15.html}, Georgia Tech~\cite{https://web.archive.org/web/20131002121909/https://www.cc.gatech.edu/\%7Eninamf/LGO10/index.html}, Carnegie Mellon~\cite{https://www.cs.cmu.edu/~arielpro/15896s16/index.html}, and Duke~\cite{https://www2.cs.duke.edu/courses/spring16/compsci590.4/}, identified only one other course with similarly-structured assignments.
 
-Harvard's Computer Science 136, ``Economics and Computation'',\footnote{https://beta.blogs.harvard.edu/k108875/assignments/} assigns two programming problem sets.
-The first requires implementation of a peer-to-peer file sharing system similar to Bittorrent, a protocol in which incentives parallel Prisoner's Dilemma.
+Harvard's Computer Science 136, ``Economics and Computation''~\cite{https://beta.blogs.harvard.edu/k108875/assignments/}, assigns two programming problem sets.
+The first requires implementation of a peer-to-peer file sharing system similar to BitTorrent, a protocol in which incentives parallel Prisoner's Dilemma.
 However, the assignment is not a competition and student solutions are not differentiated based on strategic properties.
 The second assignment is a strategy design exercise built on the generalized second-price auction, in which student strategies vary and are graded based on their performance in a competitive environment.
 This is very similar to both the Spring 2014 and Spring 2017 auction exercises of COS 445 at Princeton.
@@ -132,7 +138,7 @@ Such resources are useful in the general case of developing new programming-base
 Most auto-grading systems are designed with an assumption that each student submission is graded in isolation from other student submissions.
 Such systems are not applicable to this project since the strategy design exercises involve evaluation of student strategy performance in a common environment.
 Though existing automatic grading systems cannot replicate the full extent of this work, I have integrated existing resources for assignment submission and student feedback to perform smaller tasks within a larger system.
-I integrated CS DropBox\footnote{https://csguide.cs.princeton.edu/academic/csdropbox} functionality where relevant, and I modeled the leaderboard structure after review of the leaderboard implementation used in other Princeton CS classes.
+I integrated CS DropBox~\cite{https://csguide.cs.princeton.edu/academic/csdropbox} functionality where relevant, and I modeled the leaderboard structure after review of the leaderboard implementation used in other Princeton CS classes.
 Generally, no such tools would leverage the high degree of structural similarity between strategy design exercises, and a dedicated project for these exercises will allow for more efficient development and evaluation.
 
 \section*{Approach}
@@ -146,11 +152,11 @@ While I was initially inclined to pursue implementation in Java, I spent conside
 This was necessary because I would incur a considerable cost to myself and to others ere I to change programming languages partway through the semester.
 I would have to rebuild all previous work, and I would inconvenience all the students of COS 445 by making them change languages and wasting their time learning the abandoned language.
 
-Many students suggested the assignments be implemented in Python,\footnote{per survey 1 results} and this would be preferred by the course staff as well.
+Many students suggested the assignments be implemented in Python,~\cite{per survey 1 results} and this would be preferred by the course staff as well.
 Members of the Mechanism Design group are not expected to have working proficiency with Java, but many have enough experience with Python to support students.
 Additionally, Python's conciseness and ability to load classes from user input would be useful when implementing tools which are parameterized on user-input strategy names.
 Unfortunately, COS 445's prerequisite courses only provide Java experience, and not Python experience, so students reasonably expect they will only be asked to write Java code.
-Data from other course surveys indicate that 90\% of students report themselves fluent in Java after the Princeton introductory sequence, compared to 30\% for Python, confirming that the student work for the assignment must be in Java.\footnote{COS 333 survey data}
+Data from other course surveys indicate that 90\% of students report themselves fluent in Java after the Princeton introductory sequence, compared to 30\% for Python, confirming that the student work for the assignment must be in Java.~\cite{COS 333 survey data}
 Given this constraint, and lacking any other language selection pressures, I elected to implement as much of the assignment code as possible in Java, with limited usage of scripting languages such as Python, Bash, and GNU Make.
 These scripting languages were used only where Java would not suffice and only where implementation details were irrelevant to student assignment comprehension.
 
@@ -160,15 +166,15 @@ Furthermore, by constructing new instances of student implementations between ga
 
 However, several default Java behaviors do not map cleanly onto the desired properties of strategy design exercises.
 For instance, Java objects used as function parameters are passed by mutable, nullable reference.
-This is in contrast to functional languages (including Ocaml and Rust), where parameters are immutable and nonnull unless otherwise explicitly specified.
-Current industry standards for Java code obviate both of these issues using modern language features.\footnote{https://github.com/google/guava/wiki/UsingAndAvoidingNullExplained}\footnote{https://github.com/google/guava/wiki/ImmutableCollectionsExplained}\footnote{https://docs.oracle.com/javase/7/docs/api/java/util/Collections.html\#unmodifiableList(java.util.List)}
+This is in contrast to functional languages (including Ocaml and Rust), where parameters are immutable and non-null unless otherwise explicitly specified.
+Current industry standards for Java code obviate both of these issues using modern language features.~\cite{https://github.com/google/guava/wiki/UsingAndAvoidingNullExplained}~\cite{https://github.com/google/guava/wiki/ImmutableCollectionsExplained}~\cite{https://docs.oracle.com/javase/7/docs/api/java/util/Collections.html\#unmodifiableList(java.util.List)}
 In order to preserve backwards compatibility, these features are not implemented by default.
 Where possible, I have taken advantage of these features.
 Since the assignment specification documents that students are required not to modify parameters, instructor code can use unmodifiable (immutable) containers.
 However, I have not included \texttt{NotNull} annotations because they are not taught in the prerequisite courses and, as previously noted, these assignments should not require students to self-teach any programming skills.
-In my own framework code, which must be supported by future instructors, I decided to assume support for Java 9, released in fall 2016, and to use modern language features, since course instructors are at least as likely to have industry experience with modern Java code as experience with the Princeton introductory sequence.\footnote{https://www.techworld.com/news/developers/java-9-release-date-new-features-3660988/}
+In my own framework code, which must be supported by future instructors, I decided to assume support for Java 9, released in fall 2016, and to use modern language features, since course instructors are at least as likely to have industry experience with modern Java code as experience with the Princeton introductory sequence.~\cite{https://www.techworld.com/news/developers/java-9-release-date-new-features-3660988/}
 
-While of lesser urgency, I have also planned ahead to ensure the reusability of my work.
+While of lesser urgency, I have also planned ahead to ensure the re-usability of my work.
 I elected to store this work in a University-owned private GitHub repository.
 I also documented the repository structure and contents, including a summary of the process of developing and deploying a new assignment.
 This ensures that future course staff will have the physical and technical means to maintain this project after I have graduated.
@@ -178,7 +184,7 @@ This ensures that future course staff will have the physical and technical means
 % TODO: make it fit
 Before the first problem set of the course was assigned in this semester, Professor Weinberg and I designed a handout interface and tools to allow students to test their strategies against each other, which I then implemented.
 The game simulates college admissions using stable matchings.
-While I implemented this handout with the explicit goal of producing a tool to test out multiple different student strategies in the specified application environment, I followed the principles of modular software design taught in COS 217.\footnote{Kernighan and Pike chapter 4}
+While I implemented this handout with the explicit goal of producing a tool to test out multiple different student strategies in the specified application environment, I followed the principles of modular software design taught in COS 217.~\cite{Kernighan and Pike chapter 4}
 I factored out the code which implemented the Gale-Shapley deferred acceptance algorithm for stable matchings from the code which performed randomized trials of the stable matchings and produced performance statistics for students.
 
 When it came time to implement the second strategy design exercise, I was able to reuse code which processed results of trials, even though the nature of the trials changed from college admissions to elections.
@@ -190,8 +196,8 @@ However, because of conscious design decisions to factor out repeated code from 
 It is modular, as described above, so that new extensions such as additional tools or interfaces can be written for strategy design exercises.
 Throughout the semester, I have leveraged my role as an undergraduate course assistant for COS 445 during the current semester in order to identify and produce such extensions.
 It is reusable, both for the same assignments in future years and for new strategy design exercises implemented by future course staff with lower overhead.
-\footnote{TODO redraw using Powerpoint}
-\footnote{TODO use this diagram when I talk about modularization earlier}
+% TODO redraw using Powerpoint
+% TODO use this diagram when I talk about modularization earlier
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.75\linewidth]{Handwritten_Diagram.jpg}
@@ -199,10 +205,11 @@ It is reusable, both for the same assignments in future years and for new strate
 \end{figure}
 
 \subsection*{Handout Implementation}
-In order to design my framework, I reviewed non-modularized code from the Spring 2017 auctions exercise.
+In order to design my framework, I reviewed non-modular code from the Spring 2017 auctions exercise.
 This is the only assignment for which I had access to both the student handout and the grader code.
 In any strategy design exercise, after the game design is complete, the next step is to implement is the student interface.
-The interface for the auctions exercise is quite simple:\footnote{TODO:\ make this code a figure}
+The interface for the auctions exercise is quite simple, as shown in Figure~\ref{minted:Bidder}.
+\begin{figure}[hbt]
 \begin{minted}{java}
 import java.util.List;
 
@@ -216,7 +223,9 @@ public interface Bidder {
     public void addResults(List<Double> bids, int myBid, double myPayment);
 }
 \end{minted}
-This interface describes the necessary functions of a student strategy for the auctions execise.
+  \caption{\texttt{interface Bidder} demonstrates a strategy interface}\label{minted:Bidder}
+\end{figure}
+This interface describes the necessary functions of a student strategy for the auctions exercise.
 Each day, they must bid on an auction of advertising slots which appear on a search results page (often called ``sponsored search results'') and assign different values to words auctioned on different days.
 The strategy also has access the winning bids for each of the ten sponsored results from each past day and knows which of those bids were its own.\footnote{When a strategy wins, it is also told how much it paid.}
 This allows the strategy to obey the budget constraint: across all 1000 days, it may not spend more than 500.
@@ -234,13 +243,13 @@ However, this prior work did minimal amortization and no advanced output formatt
 While the handout code written for the first assignment did minimal post-processing, this distinction was quite useful when later developing the auto-grader and additional extensions.
 
 During the development of this handout, however, the statically-typed nature of Java raised some difficulty.
-Zhang's grader code had student submission names hardcoded into complex expressions, as though they had been copied in from a manually-written list formatted using \texttt{sed}.
+Zhang's grader code had student submission names hard-coded into complex expressions, as though they had been copied in from a manually-written list formatted using \texttt{sed}.
 In the context of developing a handout to allow students to test multiple strategies of their own design, I determined that requiring students to modify the simulator Java code whenever they changed which strategies they wanted to test would be so cumbersome that the simulator might not have been distributed at all.
 Additionally, graders desire functionality to configure the list of evaluated strategies without having to manually list out all the student strategy names and modify it to identify and diagnose misbehaving student strategies.
 Since Java is not able to type-check user-input strategy names, I determined that the most effective workaround for this issue would be to automatically rewrite the Java code before compile-time.
 
-For this purpose, I developed a simple Python script capable of rewriting arbitrary template plaintext files using a CSV file.
-This script, \texttt{formatBase.py},\footnote{TODO: appendix this} builds a list of dictionaries, one for each row of the CSV, using the header of the CSV as the keys and the contents of the row as the values.
+For this purpose, I developed a simple Python script capable of rewriting arbitrary template plain-text files using a CSV file.
+This script, \texttt{formatBase.py}, included as Appendix~\ref{appendix:formatBase}, builds a list of dictionaries, one for each row of the CSV, using the header of the CSV as the keys and the contents of the row as the values.
 In its input, it identifies lines which start with \texttt{//R} and end with \texttt{//}.
 For each such line in its input, it outputs multiple lines, each corresponding to the input line rewritten using a distinct row of the CSV by replacing each curly-enclosed key with the corresponding value.
 It also rewrites the key \texttt{0} with the row number from the configuration table.
@@ -249,7 +258,7 @@ However, this practice is extremely dangerous, since using a user-submitted conf
 Fortunately, this is not a security concern, since students already run arbitrary code on the evaluation machine: their submitted strategy.
 
 Given a CSV file as input with the header row \texttt{netID} and a row for each student's name, the following function is thereby rewritten to instantiate one implementation of each Student class listed in the configuration file:
-\footnote{use figure}
+\begin{figure}[hbt]
 \begin{minted}{java}
     // S, T, W are simulation parameters documented in the student interface
     public static int[] oneEachTrial(double S, double T, double W)
@@ -260,10 +269,13 @@ Given a CSV file as input with the header row \texttt{netID} and a row for each 
         return runTrial(students, S, T, W);
     }
 \end{minted}
+  \caption{\texttt{oneEachTrial} demonstrates usage of \texttt{formatBase.py}}\label{minted:oneEachTrial}
+\end{figure}
+
 My modular design allows for data collection code to vary without additional overhead.
 The following method instantiates an instance of an instructor-provided strategy using reflection, in addition to the strategies specified in the configuration file.
 This method is useful for grading assignments.
-\footnote{todo: figure}
+\begin{figure}[hbt]
 \begin{minted}{java}
     public static <Student_T extends Student> int[] withExtraTrial(
             Class<Student_T> clazz, double S, double T, double W)
@@ -281,12 +293,15 @@ This method is useful for grading assignments.
         return runTrial(students, S, T, W);
     }
 \end{minted}
+  \caption{\texttt{withExtraTrial} demonstrates modularity in data processing}\label{minted:withExtraTrial}
+\end{figure}
 
 Given all of the components described above, I have developed a considerably improved the assignment handout.
 Previously, the handout contained the strategy interface and a simple implementation strategy with a sample testing method for that implementation only.
 This semester, assignment handouts contained not just the strategy interface and simple implementation, but also a full copy of the above game round simulation, complete with amortization by many randomized trials, which simply prints the average score of each strategy.
 While working on the assignment, students can reconfigure the testing code easily by modifying the configuration file to contain whatever strategies they want to simulate.
-For instance, given strategies \texttt{Student\_random.java} and \texttt{Student\_favorites.java}, which apply to random schools and favorite schools in the above college admissions simulation, all the student would need to do to simulate 10 submissions using the former strategy and 15 using the latter would be set the configuration file to ten lines of \texttt{random} and 15 lines of \texttt{favorites}, and then run \texttt{make test}.
+For instance, given strategies \texttt{Student\_random.java} and \texttt{Student\_favorites.java}, which apply to random schools and favorite schools in the above college admissions simulation, all the student would need to do to simulate ten submissions using the former strategy and 15 using the latter would be set the configuration file to ten lines of \texttt{random} and 15 lines of \texttt{favorites}, and then run \texttt{make test}.
+Such a configuration file is included as Appendix~\ref{appendix:students}.
 Whereas last year each student would have had to manually write simulation code to run the exact collection of strategies they wanted to simulate, the new handout will automatically rewrite the simulation code to simulate those strategies using \texttt{formatBase.py} and then compile and run the simulation with no additional overhead.
 
 \subsection*{Auto-Grader Design}
@@ -296,7 +311,7 @@ A key constraint in the grading of these assignments is that the students must b
 Therefore, curving each student's grade based on the percentile of their strategy's performance is not acceptable.
 In this scenario, a student would be as happy to hurt their peers as to improve their own strategy.
 For instance, in an iterated prisoner's dilemma, if students are graded based on relative performance, then they are apathetic between both cooperating and both defecting.
-So there is no incentive under any circumstance to cooperate, even in the face of potentially irrational counterparties, and every student should always defect.
+So there is no incentive under any circumstance to cooperate, even in the face of potentially irrational counter-parties, and every student should always defect.
 
 One feasible grading strategy, given this constraint, would be to grade student performance without any curve at all.
 That is, in a simulation where the best possible performance is 5000 points, and the worst possible performance is 0 points, students would receive 3/5 on the assignment if they scored 3000 points on average.
@@ -337,61 +352,28 @@ Consider the components of the simulation handout:
 \item
   \texttt{runTrial} method which takes a list of strategies and simulates their behaviors, e.g.\ in a college admissions simulation
 \item
-  data processing methods, e.g.\ \texttt{oneEachTrial}, which builds a list containing each configuration-specified strategy once,\footnote{see figure above} and \texttt{oneEachTrials} (not shown above), which runs \texttt{oneEachTrial} a large number of times and averages the results
+  data processing methods, e.g.\ \texttt{oneEachTrial} (Figure~\ref{minted:oneEachTrial}), which builds a list containing each configuration-specified strategy once, and \texttt{oneEachTrials} (not shown above), which runs \texttt{oneEachTrial} a large number of times and averages the results
 \item
   post-processing methods, e.g.\ outputting a CSV file containing student names and their average performance in the simulation
 \end{itemize}
+
 Only the first of these contains assignment-specific code.
 In order to implement replacement-comparison grading, I implemented the following methods:
+
 \begin{itemize}
 \item
-  two new data processing methods: \texttt{withExtraTrial}, which builds a list containing each configuration-specified strategy once, and one extra strategy passed in as a parameter\footnote{see figure above}, and a corresponding method \texttt{withExtraTrials}, which averages the above.
+  two new data processing methods: \texttt{withExtraTrial} (Figure~\ref{minted:withExtraTrial}), which builds a list containing each configuration-specified strategy once, and one extra strategy passed in as a parameter, and a corresponding method \texttt{withExtraTrials}, which averages the above.
   These are very similar to the existing data processing methods
 \item
   A new post-processing method that computes grades for each student given how many instructor strategies each student strategy outperformed and a lookup table to translate this win-count to an assignment grade.
-  This method, \texttt{writeGrades}, is included as appendix \footnote{TODO: make into figure/appendix}
+  This method, \texttt{writeGrades}, is included as Appendix~\ref{appendix:writeGrades}
 \end{itemize}
-\begin{minted}{java}
-    public static void writeGrades () {
-        final int numTrials = 1;
-        //R netids[{0}] = "{netID}";//
-        // defaults as specified in assignment handout PDF
-        final double S = 100, T = 100, W = 10;
-        // Compute x_i
-        double[] oneEachTrials = oneEachTrials(100, S, T, W);
 
-        // Instructor strategies
-        List<Class<? extends Student>> ourStrats =
-            new ArrayList<Class<? extends Student>>();
-        ourStrats.add(Student_REDACTED.class);
-        // a total of twelve such lines like the above line
-        double[] winsToPoints = new double[]{
-            0, 0.5, 1.0, 1.2, 1.5, 1.8, 2, 3, 3.5, 4.0, 4.5, 4.8, 5
-        };
-        // Compute \sum_j \delta_{x_i > y_j} for all i
-        int[] wins = new int[N];
-        for (Class<? extends Student> strat : ourStrats) {
-            double[] res = withExtraTrials(strat, numTrials, S, T, W);
-            for (int i = 0; i < N; ++i) {
-                if (res[i] > res[N]) {
-                    ++wins[i];
-                }
-            }
-        }
-        // Output grades as csv
-        System.out.println("netID,points");
-        for (int i = 0; i < N; ++i) {
-            System.out.println(netids[i] + "," + Double.toString(oneEachTrials[i])
-                               + "," + Double.toString(winsToPoints[wins[i]]));
-        }
-    }
-\end{minted}
 Given only these two changes, the handout code has been transformed into an auto-grader.
 Additionally, neither of these changes required alteration of the \texttt{runTrial} method, so minimal additional work is necessary for grading an assignment once the handout has been made.
 Only filling in the instructor strategy names and scoring rubric is needed.
 
-In summary, each assignment consists of a strategy interface, implementations of that strategy, a list of those implementations, a \texttt{runTrial} method which specifies how to evaluate those strategies, methods which run specific subsets of strategies, methods that post-process the results of those trials to provide low-latency feedback or for auto-grading, and automating these steps with a Makefile to configure, compile, and run the assignment simulation.\footnote{add ref to above diagram here}
-\footnote{TODO add formatBase.py config csv}
+In summary, as described in Figuree~\ref{figure:outline}, each assignment consists of a strategy interface, implementations of that strategy, a list of those implementations, a \texttt{runTrial} method which specifies how to evaluate those strategies, methods which run specific subsets of strategies, methods that post-process the results of those trials to provide low-latency feedback or for auto-grading, and automating these steps with a Makefile to configure, compile, and run the assignment simulation.
 
 In addition to easily altering an assignment handout into an auto-grader, my framework also makes it easy to build new assignments.
 To adapt the college admissions exercise described above into the elections simulation of the second problem set of COS 445 this spring, only a few changes were necessary.
@@ -416,17 +398,17 @@ The strength of modular implementation also comes from the ability to adapt to c
 In this way, I was able to extend my framework throughout the semester in order to address my needs as a course assistant to remedy issues with the strategy design exercises.
 While the handout code enabled students to verify that their code compiled and ran on their own personal computers, several students submitted non-functioning strategies due to environmental differences, demonstrating the classic issue ``Works On My Machine''.
 
-Other computer science courses at Princeton employ an online tool in the CS DropBox called ``Check Submit''.
+Other computer science courses at Princeton employ an online tool in the CS Dropbox called ``Check Submit''.
 This tool allows instructors to specify tests to be run on department-configured machines using student code, and enables students to evaluate the performance of their submission against these tests without the concern that the software environment on their machine might not be compatible.
 I enabled ``Check Submit'' for COS 445 strategy design exercises as a part of this work by developing simple Bash script and Makefile which adapts my assignment framework to this new setting.
 My ``Check Submit'' script copies in the assignment handout from a predefined location into the student submission folder, detect the student submission name, and write the \texttt{formatBase.py} configuration file to run their submission.
-Now, without any modification of the assignment code, every strategy design exercise automatically has DropBox ``Check Submit'' functionality possible.
+Now, without any modification of the assignment code, every strategy design exercise automatically has Dropbox ``Check Submit'' functionality possible.
 This confirms to students that their strategy will not be incompatible with the grading environment, improving student satisfaction with the course.
 
 However, students would still benefit from more realistic testing.
 Thus, I developed a leaderboard so students could better understand how a strategy would perform against more realistic collection of peer strategies.
-First, I initialized a new DropBox assignment for students to submit strategies to the leaderboard, though these strategies need not be their final assignment submission.
-I implemented the leaderboard by writing a simple Bash script which scrapes all student submissions from the DropBox, automatically writes the configuration file to run every students' submission together, and runs the simulation provided in the student handout as above.
+First, I initialized a new Dropbox assignment for students to submit strategies to the leaderboard, though these strategies need not be their final assignment submission.
+I implemented the leaderboard by writing a simple Bash script which scrapes all student submissions from the Dropbox, automatically writes the configuration file to run every students' submission together, and runs the simulation provided in the student handout as above.
 Because the simulation output is an easy-to-parse table, I can automatically reformat it into an HTML table and place this in a web page accessible through the department web servers.
 The script to update the leaderboard runs through a \texttt{cron} job at a customizable interval.
 
@@ -440,14 +422,14 @@ This mostly resolved the issue.
 
 \section*{Results}
 This project has already achieved minimum viable product by providing a framework for implementation of strategy design exercises in the current year of COS 445.
-These assignments and the framework I developed are documented and available at the course GitHub site.\footnote{https://github.com/PrincetonUniversity/cos445-hw/tree/s18 requires invite}
+These assignments and the framework I developed are documented and available at the course GitHub site.~\cite{https://github.com/PrincetonUniversity/cos445-hw/tree/s18 requires invite}
 Thus, they will be available for reuse in future offerings of the course.
 
 While I have been unable to experimentally determine whether my project will be reused, I have evaluated my successful achievement of each other goal.
 I have decreased the work to build each assignment within a semester and the instructor time allocated to assignment implementation, eliminated the inter-year assignment reconstruction, and improved available student resources
 These achievements have increased student and instructor satisfaction with the strategy design exercises.
 
-My primary goal, which unifies my work and sets it apart from past work on this subject, has been to discover modularity and decrease assignment to assignment rewriting.
+My primary goal, which unifies my work and sets it apart from past work on this subject, has been to discover modularity and decrease assignment-to-assignment rewriting.
 \begin{itemize}
 \item code rewriting measurements between assignments
 \item instructor time usage
@@ -460,7 +442,7 @@ I have also succeeded at leveraging the extensibility of my project to improve s
 \item list resources created
 \item polling data about student usage
 \item empirical results about student error rates
-  ``Illegal submissions'' constitute student strategies which do not compile, throw exceptions, violate assertions, or otherwise behave outside of the parameters of the simulation.\footnote{Poorly performing strategies which obey the specification are legal.}
+  ``Illegal submissions'' constitute student strategies which do not compile, throw exceptions, violate assertions, or otherwise behave outside of the parameters of the simulation.~\cite{Poorly performing strategies which obey the specification are legal.}
   The illegal submission rate measures the percentage of students who were unable to develop a quality strategy for reasons other than lack of mastery of the course content.
 \end{itemize}
 
@@ -494,8 +476,8 @@ While currently assignments are distributed independently, so no code may be sha
 This will complicate the assignment handout process slightly, but will simplify code reuse and iteration.
 Earlier assignments were built off of earlier versions of the infrastructure and will need to be modified where they differ from newer versions when they are reused, but sharing code between assignments will prevent this inconsistency from developing again.
 
-Recently, I became aware of a Java interface for loading classes at runtime.
-This technology, called ClassLoader,\footnote{https://docs.oracle.com/javase/9/docs/api/java/lang/ClassLoader.html} was implemented in the Spring 2014 handout code.
+Recently, I became aware of a Java interface for loading classes at run time.
+This technology, called ClassLoader,~\cite{https://docs.oracle.com/javase/9/docs/api/java/lang/ClassLoader.html} was implemented in the Spring 2014 handout code.
 I was unable to use ClassLoaders initially because I did not gain access to the Spring 2014 code until later in the semester.
 This simple modification will eliminate Python dependency currently required by \texttt{formatBase.py} and allow students to better understand and modify handout simulation code.
 
@@ -503,7 +485,7 @@ Though few other universities currently teach courses in algorithmic game theory
 As they do, they will look to COS 445 for resources, along with Stanford CS 269I, C.M.U.\ 15--196, and Harvard CS 136.
 It is my hope that my code could be understood and assigned such courses, with modification to suit the topics covered.
 
-\section*{Acknowledgements}
+\section*{Acknowledgments}
 First of all, I would like to thank Professor Weinberg for his leadership in designing the written specifications and grading rubrics for the strategy design exercises, and for his dedication to teaching and organizing COS 445.
 His dedication to the course engaged me as a student last year and was invaluable to my work this year.
 I would like to thank Cyril Zhang for his work developing the implementation of the strategy design exercises I completed as a student, which inspired and served as a basis for this work.
@@ -513,7 +495,7 @@ By grading student write-ups for strategy design exercises, Leila Clark, Wei Hu,
 These details provided crucial insights as to the clarity of the resources I have developed and allowed me to provide targeted documentation where my code was unclear.
 Thanks also to all those students of COS 445 Spring 2018 for their feedback on the assignments used in the course, which informed my development of this project.
 
-I created this work within the framework of Professor Dave Walker's Independent Work Seminar, IW 09: ``You Be The Prof''.
+I created this work within the framework of Professor Dave Walker's Independent Work Seminar, I.W.\ 09: ``You Be The Prof''.
 Professor Walker kept me organized and on schedule, and his guidance helped me identify and describe the topic of this work.
 I also appreciate the feedback I received throughout the semester from my peers in Professor Walker's seminar, Noah Beattie-Moss, Mel Shu, Greg Umali, and Alex Xu.
 
@@ -526,4 +508,135 @@ Thus, I am not being awarded both payment as a course assistant and credit as an
 Though students completed assignments developed from and optionally provided feedback for these assignments while enrolled in COS 445, these interactions were overseen and approved by Professor Weinberg.
 This paper represents my own work in accordance with university regulations.
 
+\newpage
+\begin{appendices}
+  \singlespacing{}
+  \appendixpage{}
+  \section{\texttt{writeGrades} demonstrates modularity in post-processing}\label{appendix:writeGrades}
+\begin{minted}{java}
+    public static void writeGrades () {
+        final int numTrials = 1;
+        //R netids[{0}] = "{netID}";//
+        // defaults as specified in assignment handout PDF
+        final double S = 100, T = 100, W = 10;
+        // Compute x_i
+        double[] oneEachTrials = oneEachTrials(100, S, T, W);
+
+        // Instructor strategies
+        List<Class<? extends Student>> ourStrats =
+            new ArrayList<Class<? extends Student>>();
+        ourStrats.add(Student_REDACTED.class);
+        // a total of twelve such lines like the above line
+        double[] winsToPoints = new double[]{
+            0, 0.5, 1.0, 1.2, 1.5, 1.8, 2, 3, 3.5, 4.0, 4.5, 4.8, 5
+        };
+        // Compute \sum_j \delta_{x_i > y_j} for all i
+        int[] wins = new int[N];
+        for (Class<? extends Student> strat : ourStrats) {
+            double[] res = withExtraTrials(strat, numTrials, S, T, W);
+            for (int i = 0; i < N; ++i) {
+                if (res[i] > res[N]) {
+                    ++wins[i];
+                }
+            }
+        }
+        // Output grades as CSV
+        System.out.println("netID,points");
+        for (int i = 0; i < N; ++i) {
+            System.out.println(netids[i]
+                               + ","
+                               + Double.toString(oneEachTrials[i])
+                               + ","
+                               + Double.toString(winsToPoints[wins[i]]));
+        }
+    }
+\end{minted}
+  \newpage
+  \section{\texttt{formatBase.py} was used to automatically reconfigure the strategies to be simulated}\label{appendix:formatBase}
+\begin{minted}{python}
+import csv
+import sys
+
+
+def main():
+    """
+    Formats the standard input to standard output.
+    Replaces lines of the form [\s]*//R(.*)//[\s]* with a line for every
+    row of data.csv with the central string formatted according to the
+    row of data.csv. Replaces lines of the form [\s]*//L(.*)//[\s]* with
+    the central string formatted with the number of rows.
+    """
+    if len(sys.argv) != 2:
+        sys.exit("Usage: {} [data.csv] < [ClassBase.java] > [Class.java]"
+                 .format(sys.argv[0]))
+
+    with open(sys.argv[1]) as f:
+        reader = csv.DictReader(f, skipinitialspace=True)
+        rows = [{k: v for k, v in row.items()} for row in reader]
+
+    for line_ in sys.stdin:
+        line_ = line_.rstrip()
+        line = line_.strip()
+        if line.startswith("//L") and line.endswith("//"):
+            print(line[3:-2].format(len(rows)))
+
+        elif line.startswith("//R") and line.endswith("//"):
+            for i, vals in enumerate(rows):
+                print(line[3:-2].format(i, **vals))
+
+        else:
+            print(line_)
+
+
+if __name__ == "__main__":
+    main()
+
+\end{minted}
+
+  \newpage
+  \section{\texttt{students.csv} provides an example configuration for \texttt{formatBase.py}}\label{appendix:students}
+\begin{verbatim}
+netID
+random
+random
+random
+random
+random
+random
+random
+random
+random
+random
+favorites
+favorites
+favorites
+favorites
+favorites
+favorites
+favorites
+favorites
+favorites
+favorites
+favorites
+favorites
+favorites
+favorites
+favorites
+\end{verbatim}
+\end{appendices}
 \end{document}
+
+%  LocalWords:  Wonnacott LocalWords writeGrades modularity Xu Zhang
+%  LocalWords:  Wildenhain baselinestretch matchings cryptocurrencies
+%  LocalWords:  cryptocurrency blockchain Zhang's Yonatan Braverman
+%  LocalWords:  CAS PHP leaderboard iteratively programatically Ocaml
+%  LocalWords:  nullable unmodifiable NotNull Kernighan Shapley myBid
+%  LocalWords:  dailyValue myPayment addResults getBid sed CSV py hbt
+%  LocalWords:  formatBase netID oneEachTrial runTrial withExtraTrial
+%  LocalWords:  clazz ReflectiveOperationException printStackTrace Hu
+%  LocalWords:  incentivized Makefile modularization cron emie Heesu
+%  LocalWords:  customizable extensibility ClassLoaders Lumbroso Shu
+%  LocalWords:  Hwang Mavrides Andreea Divyarthi Mohan Schvartzman
+%  LocalWords:  Matheus Venturyne Beattie Frain Umali numTrials strat
+%  LocalWords:  netids oneEachTrials ourStrats ArrayList winsToPoints
+%  LocalWords:  withExtraTrials toString Naamad
