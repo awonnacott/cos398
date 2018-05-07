@@ -343,43 +343,59 @@ In order to implement replacement-comparison grading, I implemented the followin
 Given only these two changes, the handout code has been transformed into an autograder.
 Additionally, neither of these changes required alteration of the \texttt{runTrial} method, so minimal additional work (only filling in the instructor strategy names and scoring rubric) is necessary for grading an assignment once the handout has been made.
 
-so now we have a framework which makes it easy to build new assignments
-what really changes?
-build ultimatum
-\footnote{TODO UML outline for reference}
+In summary, each assignment consists of a strategy interface, implementations of that strategy, a list of those implementations, a \texttt{runTrial} method which specifies how to evaluate those strategies, methods which run specific subsets of strategies, methods that postprocess the results of those trials to provide low-latency feedback or for autograding, and hooking all of the above together a \texttt{Makefile} to configure, compile, and run the assignment simulation.
+\footnote{TODO redraw using Powerpoint}
+\footnote{TODO add formatBase.py config csv}
 
-catch: sometimes we want to simulate multiple parameter settings for student code
-involves changing the main method a bit
-not much change
+\begin{figure}[hbt]
+\centering
+\includegraphics[width=0.75\linewidth]{Handwritten_Diagram.jpg}
+\caption{This is a gray image.}\label{fig:gray}
+\end{figure}
+
+In addition to easily altering an assignment handout into an autograder, my framework also makes it easy to build new assignments.
+To adapt the college admissions exercise described above into the elections simulation of the second problem set of COS 445 this spring, only a few changes were necessary.
+The written assignment specification describes a new interface, so a whole new interface file was necessary.
+Of course, all the implementations of this interface were also written from scratch for the new assignment, all of which are fairly concise but express assignment-specific strategies.
+And finally, the \texttt{runTrial} method of the simulator had to be rewritten to simulate an election instead of college admissions, and some file names had to be changed.
+No semantic changes were necessary to the data processing or postprocessing methods for either the handout or application.
 
 As currently implemented, each assignment was distributed as a standalone zip file through the course website.
-Thus, even though very little code was changed between the two assignments described above,
-more convenient in cases where minor grader tweaks are sadly necessary
-comment on separate files for each assignment - why (simplify handout)
+Thus, even though significant code was shared between the two assignments described above, they were distributed as separate files.
+While further modularization would allow assignment-specific code describing how to simulate a game round to be separated out from code which changes within, but not between, assignments, I determined during assignment development that maintaining separate codebases for each assignment has significant advantages.
+Some simulation parameters, such as the budget constraint or number of auctioned items in an auction, the variance of student preferences in an admissions simulation, or the number of polling rounds in an election, vary between assignments.
+Often, strategies are evaluated based on their performance relative to baseline instructor strategies in several different regimes of simulation parameters.
+This will involve tweaks to the grader code outside of the scope described above.
+While these changes are minimal and necessary, keeping details of grading separate between assignments proved useful in the real world.
 
-we also have a framework to build new tools
-let's build new tools
-what shoudl we build?
-what problems to address?
-ease of testing
-``Works On My Machine''
-getting a better idea about how a strategy would perform against more realistic collection of peers
+Thus far, I have illustrated the strengths of my project at performing tasks which were envisioned from the outset.
+The strength of modular implementation comes also from the ability to adapt to changing demands easily in real time.
+In this way, I was able to extend my framework throughout the semester in order to address my needs as a course assistant to remedy issues with the strategy design exercises.
+As shown below,\footnote{results section ref here} the handout code enabled students to verify that their code compiled and ran.
+However, several students submitted non-functioning strategies due to environmental differences, demonstrating the classic issue, ``Works On My Machine''.
 
-dropbox checksubmit
-learned how cs dropbox works
-a little bash + make to copy in the student handout, detect and write a config file to run their code
-show script + makefile
-show an output
+Other computer science courses at Princeton employ an online tool in the CS DropBox called ``Check Submit''.
+This tool allows instructors to specify tests to be run on department-configured machines using student code, and students to evaluate the performance of their submission against these tests without the concern that the software environment on their machine might not be compatible.
+I enabled ``Check Submit'' for COS 445 strategy design exercises as a part of this work by developing simple Bash script and Makefile which adapts my assignment framework to this new setting.
+All the script has to do is copy in the assignment handout from a predefined location into the student submission folder, detect the student submission name, and write the \texttt{formatBase.py} configuration file to run their submission.
+Now, without any modification of the assignment code, every strategy design exercise automatically has DropBox ``Check Submit'' functionality possible!
 
-leaderboard
-new tools: cycles cron
-simple to copy in all submissions, detect and write config file, run code, post it to website
-discuss issues
-student code breaking it
-harden the tester (try catch around each student with selfless behavior)
-student code causing compile failures
-no good solution here
-add check submit button to leaderboard and ask students to use it
+This confirms to students that their strategy will not be incompatible with the grading environment, improving student satisfaction with the course.
+However, students would still benefit from more realistic testing.
+Thus, I developed a leaderboard so students could better understand how a strategy would perform against more realistic collection of peer strategies.
+First, I initialized a new DropBox assignment for students to submit strategies to the leaderboard, which need not be their final assignment submission.
+I implemented the leaderboard by writing a simple Bash script which scrapes all student submissions from the DropBox, automatically writes the configuration file to run every students' submission together, and runs the simulation provided in the student handout as above.
+Because the simulation output is an easy-to-parse table, I can automatically reformat it into an HTML table and place this in a web page accessible through the department web servers.
+The script to update the leaderboard runs through a cronjob at a customizable interval.
+
+While this leaderboard provides additional feedback, there are unavoidable issues when students submit broken code.
+Since all student submissions are run together, one non-compiling or exception-throwing submission disables the leaderboard for all students.
+I worked around this issue by disabling assertions, which were used in \texttt{runTrial} to automatically halt simulation whenever a student submission performed behavior in violation of the assignment specification.
+Then, the code automatically fell back to silently overriding illegal values from student strategies with sane but selfless defaults, and the leaderboard is correctly generated even when some student submissions are faulty.
+Some student code also caused compilation failures, which are more difficult to work around.
+We enabled the check submit button to leaderboard so that students could check their leaderboard strategies would compile in the department environment, and this mostly resolved the issue.
+
+The full implementation available at the course GitHub site.\footnote{https://github.com/PrincetonUniversity/cos445-hw/tree/s18 requires invite}
 
 \section*{Results}
 As the goals of a project naturally define evaluation criteria, I have evaluated my project on the basis of each those goals: decreasing the work to build each assignment within a semester and the instructor time allocated to assignment implementation, eliminate the inter-year assignment reconstruction, improve available student resources, and in doing so improve student and instructor satisfaction.
