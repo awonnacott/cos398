@@ -6,6 +6,10 @@
 \newcommand{\IWreport}{2018}
 \newcommand{\quotes}[1]{``#1''}
 
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage{biblatex}
+
 \usepackage{appendix}
 \usepackage{titling}
 
@@ -16,6 +20,8 @@
 \widowpenalty9999
 
 \usepackage[normalem]{ulem}
+
+\addbibresource{references.bib}
 
 \begin{document}
 
@@ -180,8 +186,6 @@ I also documented the repository structure and contents, including a summary of 
 This ensures that future course staff will have the physical and technical means to maintain this project after I have graduated.
 
 \section*{Implementation}
-% TODO: signposting
-% TODO: make it fit
 Before the first problem set of the course was assigned in this semester, Professor Weinberg and I designed a handout interface and tools to allow students to test their strategies against each other, which I then implemented.
 The game simulates college admissions using stable matchings.
 While I implemented this handout with the explicit goal of producing a tool to test out multiple different student strategies in the specified application environment, I followed the principles of modular software design taught in COS 217.~\cite{Kernighan and Pike chapter 4}
@@ -192,16 +196,17 @@ Additionally, when it came time to grade the problem set, I was able to modify o
 Thus, creating a new assignment required constant work in the number of framework extensions, while creating a new framework extension requires constant work in the number of assignments.
 The result of this process duplicates significant functionality from last year's assignments.
 
-However, because of conscious design decisions to factor out repeated code from assignment implementations, my implementation has accomplished what previous implementations had not.
-It is modular, as described above, so that new extensions such as additional tools or interfaces can be written for strategy design exercises.
-Throughout the semester, I have leveraged my role as an undergraduate course assistant for COS 445 during the current semester in order to identify and produce such extensions.
-It is reusable, both for the same assignments in future years and for new strategy design exercises implemented by future course staff with lower overhead.
-% TODO redraw using Powerpoint
-% TODO use this diagram when I talk about modularization earlier
+However, because of conscious design decisions to factor out repeated code within each assignment, my project will be more reusable than implementations from past semesters.
+It is also extensible, so new extensions such as additional tools or interfaces can be written for strategy design exercises.
+The structure of my project is outlined in Figure~\ref{fig:outline}.
+The modular layout ensures that each component can be designated as either reusable between assignments (green), written for each assignment by the instructors (blue), or submitted by each student for each assignment (orange).
+Throughout the semester, I have leveraged my role as an undergraduate course assistant for COS 445 during the current semester in order to identify and produce extensions, including CS Dropbox ``Check Submit'' functionality and a student strategy leaderboard.
+This framework reusable, both for the same assignments in future years and for new strategy design exercises implemented by future course staff with lower overhead.
+
 \begin{figure}[hbt]
   \centering
-  \includegraphics[width=0.75\linewidth]{Handwritten_Diagram.jpg}
-  \caption{TODO: This is a gray image.}\label{fig:gray}
+  \includegraphics[scale=0.75]{outline.png}
+  \caption{The implementation structure of my framework.}\label{fig:outline}
 \end{figure}
 
 \subsection*{Handout Implementation}
@@ -225,6 +230,7 @@ public interface Bidder {
 \end{minted}
   \caption{\texttt{interface Bidder} demonstrates a strategy interface}\label{minted:Bidder}
 \end{figure}
+
 This interface describes the necessary functions of a student strategy for the auctions exercise.
 Each day, they must bid on an auction of advertising slots which appear on a search results page (often called ``sponsored search results'') and assign different values to words auctioned on different days.
 The strategy also has access the winning bids for each of the ten sponsored results from each past day and knows which of those bids were its own.\footnote{When a strategy wins, it is also told how much it paid.}
@@ -257,7 +263,7 @@ This script directly injects the contents of the configuration file into the Jav
 However, this practice is extremely dangerous, since using a user-submitted configuration file would allow users to execute arbitrary code on the evaluation machine.
 Fortunately, this is not a security concern, since students already run arbitrary code on the evaluation machine: their submitted strategy.
 
-Given a CSV file as input with the header row \texttt{netID} and a row for each student's name, the following function is thereby rewritten to instantiate one implementation of each Student class listed in the configuration file:
+Given a CSV file as input with the header row \texttt{netID} and a row for each student's name, the method in Figure~\ref{minted:oneEachTrial} will be rewritten to instantiate one object of each Student implementation listed in the configuration file:
 \begin{figure}[hbt]
 \begin{minted}{java}
     // S, T, W are simulation parameters documented in the student interface
@@ -271,9 +277,8 @@ Given a CSV file as input with the header row \texttt{netID} and a row for each 
 \end{minted}
   \caption{\texttt{oneEachTrial} demonstrates usage of \texttt{formatBase.py}}\label{minted:oneEachTrial}
 \end{figure}
-
 My modular design allows for data collection code to vary without additional overhead.
-The following method instantiates an instance of an instructor-provided strategy using reflection, in addition to the strategies specified in the configuration file.
+This is shown in Figure~\ref{minted:withExtraTrial}, which instantiates an instructor-provided strategy using reflection, in addition to the strategies specified in the configuration file.
 This method is useful for grading assignments.
 \begin{figure}[hbt]
 \begin{minted}{java}
@@ -373,7 +378,7 @@ Given only these two changes, the handout code has been transformed into an auto
 Additionally, neither of these changes required alteration of the \texttt{runTrial} method, so minimal additional work is necessary for grading an assignment once the handout has been made.
 Only filling in the instructor strategy names and scoring rubric is needed.
 
-In summary, as described in Figuree~\ref{figure:outline}, each assignment consists of a strategy interface, implementations of that strategy, a list of those implementations, a \texttt{runTrial} method which specifies how to evaluate those strategies, methods which run specific subsets of strategies, methods that post-process the results of those trials to provide low-latency feedback or for auto-grading, and automating these steps with a Makefile to configure, compile, and run the assignment simulation.
+In summary, as described in Figure~\ref{fig:outline}, each assignment consists of a strategy interface, implementations of that strategy, a list of those implementations, a \texttt{runTrial} method which specifies how to evaluate those strategies, methods which run specific subsets of strategies, methods that post-process the results of those trials to provide low-latency feedback or for auto-grading, and automating these steps with a Makefile to configure, compile, and run the assignment simulation.
 
 In addition to easily altering an assignment handout into an auto-grader, my framework also makes it easy to build new assignments.
 To adapt the college admissions exercise described above into the elections simulation of the second problem set of COS 445 this spring, only a few changes were necessary.
@@ -452,9 +457,7 @@ In addition to the data gathered above, I verified this achievement by surveying
 \item polling data about student usage
 \end{itemize}
 
-% Thus, quantitative metrics, including software failure rates and instructor time usage, and qualitative metrics, including student and instructor satisfaction, both illustrate the improvements to the course and emphasize the importance of quality tooling to quality programming-based assignments.
-
-% What are your thoughts on how well the strategy design exercises have gone this year? Specifically, I'm interested in your satisfaction with the implementations and software, and the amount of instructor time and frustration spent. (And less intersted in comments on the course policy decisions that may have impacted how well they went, sicne that's not in the scope of my independent work.)
+% What are your thoughts on how well the strategy design exercises have gone this year? Specifically, I'm interested in your satisfaction with the implementations and software, and the amount of instructor time and frustration spent.
 
 % ** significantly** improved instructor involvement.
 % I didn't actually touch any of the software directly, so I don't know how to comment on that. But I felt like the challenges mostly ran themselves. We talked briefly to set it up. We talked briefly to decide how to grade, and I didn't have to answer any technical questions for students in between
@@ -507,6 +510,10 @@ Where there was potential for overlap between my role as an undergraduate course
 Thus, I am not being awarded both payment as a course assistant and credit as an enrolled student for the same actions.
 Though students completed assignments developed from and optionally provided feedback for these assignments while enrolled in COS 445, these interactions were overseen and approved by Professor Weinberg.
 This paper represents my own work in accordance with university regulations.
+
+\bstctlcite{bstctl:etal, bstctl:nodash, bstctl:simpurl}
+\medskip
+\printbibliography[]
 
 \newpage
 \begin{appendices}
