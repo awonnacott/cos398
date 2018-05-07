@@ -17,7 +17,8 @@
 \begin{document}
 
 \title{
-A Modular Framework for Developing, Deploying, and Evaluating Game-Theoretic Strategy Design Exercises}
+  A Modular Framework for Developing, Deploying, and Evaluating Game-Theoretic Strategy Design Exercises
+}
 
 \author{Andrew Wonnacott\\
   Advisers: Professor Dave Walker, Professor Matt Weinberg}
@@ -76,11 +77,14 @@ They are scored based on their revenue from ad clicks minus their expenditures o
 To create a more realistic simulation, students are graded solely on the performance of their own strategy, not on a curve of the performance of their peers.
 That is to say, student grades on these strategy design exercises are not zero-sum.
 
-While the strategy design exercises assignments are popular with students\footnote{https://reg-captiva.princeton.edu/chart/index.php?terminfo=1184\&courseinfo=012095 requires CAS login}, they also demand considerable instructor resources be dedicated to building and grading software resources, which have historically been significantly rebuilt for each assignment.
+These strategy design exercises are intended to help students place theoretical results from the course in context.
+They create a scenario in which mastery of theoretical course content is demonstrated by making and justifying real-world decisions.
+Professor Weinberg's intent is that no student should experience difficulty implementing their strategy, and all of the challenge should come from developing a creative, successful strategy.
+
+While the strategy design exercises assignments are popular with students\footnote{https://reg-captiva.princeton.edu/chart/index.php?terminfo=1184\&courseinfo=012095 requires CAS login}, they also demand dedication of considerable instructor resources to building software for student handouts and strategy evaluation, which have historically been significantly rebuilt for each assignment.
 Worse still, due to course staffing changes, this work has not been preserved between semesters, resulting in inefficient allocation of department resources to producing new exercises without the institutional memory or software resources previously developed.
 Due to the limited tooling provided in past semesters for students to test their code, many submissions did not compile or caused runtime exceptions, requiring considerable additional instructor resources.
 
-% the "programming assignments" aren't really about your ability to code. They are about placing the theoretical results from the course in context. They create a scenario in which mastery of theoretical results from the course content is demonstrated by making and justifying real-world decisions.
 
 \section*{Related Work}
 This work was developed to replace previous software design exercises assigned to COS 445 students\footnote{including the author} in Spring 2017.\footnote{https://web.archive.org/web/20170916042726/https://www.cs.princeton.edu/~smattw/Teaching/cos445sp17.htm}
@@ -136,9 +140,12 @@ Cyril Zhang completed the TA requirement for the PhD program last fall, so at th
 Therefore, the course needed not just long-term work to improve student and instructor resources, but also short-term work to maintain and debug the same resources.
 These coinciding requirements inspired me to design one extensible implementation of all the reusable components for software design exercises, and to develop the project iteratively in conjunction with its usage in the course.
 This software would naturally grow throughout development as demanded by the needs of the course, and the final product will naturally lower-bound the maximum degree of automation and modularity possible.
+While this decision to develop my software using agile methods obviates the need for an extensive design process, a few key decisions were still needed before implementation could commence.
 
-% TODO: make it fit
-The first key decision in the implementation of these programming assignments was language selection.
+While I was initially inclined to pursue implementation in Java, I spent considerable effort on language selection to verify this decision.
+This was necessary because I would incur a considerable cost to myself and to others ere I to change programming languages partway through the semester.
+I would have to rebuild all previous work, and I would inconvenience all the students of COS 445 by making them change languages and wasting their time learning the abandoned language.
+
 Many students suggested the assignments be implemented in Python,\footnote{per survey 1 results} and this would be preferred by the course staff as well.
 Members of the Mechanism Design group are not expected to have working proficiency with Java, but many have enough experience with Python to support students.
 Additionally, Python's conciseness and ability to load classes from user input would be useful when implementing tools which are parameterized on user-input strategy names.
@@ -161,12 +168,13 @@ Since the assignment specification documents that students are required not to m
 However, I have not included \texttt{NotNull} annotations because they are not taught in the prerequisite courses and, as previously noted, these assignments should not require students to self-teach any programming skills.
 In my own framework code, which must be supported by future instructors, I decided to assume support for Java 9, released in fall 2016, and to use modern language features, since course instructors are at least as likely to have industry experience with modern Java code as experience with the Princeton introductory sequence.\footnote{https://www.techworld.com/news/developers/java-9-release-date-new-features-3660988/}
 
-In order to increase the reusability, I elected to store this work in a University-owned private GitHub repository and documented the repository structure and contents.
+While of lesser urgency, I have also planned ahead to ensure the reusability of my work.
+I elected to store this work in a University-owned private GitHub repository.
+I also documented the repository structure and contents, including a summary of the process of developing and deploying a new assignment.
 This ensures that future course staff will have the physical and technical means to maintain this project after I have graduated.
 
 \section*{Implementation}
 % TODO: signposting
-\subsection*{Preliminary Choices}
 % TODO: make it fit
 Before the first problem set of the course was assigned in this semester, Professor Weinberg and I designed a handout interface and tools to allow students to test their strategies against each other, which I then implemented.
 The game simulates college admissions using stable matchings.
@@ -178,10 +186,17 @@ Additionally, when it came time to grade the problem set, I was able to modify o
 Thus, creating a new assignment required constant work in the number of framework extensions, while creating a new framework extension requires constant work in the number of assignments.
 The result of this process duplicates significant functionality from last year's assignments.
 
-However, because of conscious design decisions to factor out repeated code from assignment implementations, it accomplishes what previous implementations had not.
-It will be modular, as described above, so that new extensions such as additional tools or interfaces can be written for strategy design exercises.
-Throughout the semester, I can leverage my role as an undergraduate course assistant for COS 445 during the current semester in order to identify and produce such extensions.
-It will be reusable, both for the same assignments in future years and for new strategy design exercises implemented by future course staff with lower overhead.
+However, because of conscious design decisions to factor out repeated code from assignment implementations, my implementation has accomplished what previous implementations had not.
+It is modular, as described above, so that new extensions such as additional tools or interfaces can be written for strategy design exercises.
+Throughout the semester, I have leveraged my role as an undergraduate course assistant for COS 445 during the current semester in order to identify and produce such extensions.
+It is reusable, both for the same assignments in future years and for new strategy design exercises implemented by future course staff with lower overhead.
+\footnote{TODO redraw using Powerpoint}
+\footnote{TODO use this diagram when I talk about modularization earlier}
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.75\linewidth]{Handwritten_Diagram.jpg}
+  \caption{TODO: This is a gray image.}\label{fig:gray}
+\end{figure}
 
 \subsection*{Handout Implementation}
 In order to design my framework, I reviewed non-modularized code from the Spring 2017 auctions exercise.
@@ -277,7 +292,7 @@ Whereas last year each student would have had to manually write simulation code 
 \subsection*{Auto-Grader Design}
 The two most important components of each exercise are the handout code for the students and the auto-grader code for the instructors.
 However, in order to design the auto-grader, Professor Weinberg and I had to develop a well-specified, portable standard for grading strategy design exercises.
-A key constraint in the grading of these assignments is that the incentive for the students must be to try to maximize their own strategy's performance.
+A key constraint in the grading of these assignments is that the students must be incentivized to maximize their own strategy's performance, and not incentivized to either help or hurt their peers except when doing so helps themselves.\footnote{Of course, students are encouraged to help their peers out of their own compassion, and doing so contributes to their course participation grade, but they are not rewarded for doing so in their assignment.}
 Therefore, curving each student's grade based on the percentile of their strategy's performance is not acceptable.
 In this scenario, a student would be as happy to hurt their peers as to improve their own strategy.
 For instance, in an iterated prisoner's dilemma, if students are graded based on relative performance, then they are apathetic between both cooperating and both defecting.
@@ -319,15 +334,22 @@ Thus, the modified replacement-comparison scheme is sufficient.
 The goal of this project is not just to build a handout and an auto-grader, but to build a framework in which the development of the grader as described above requires no modification of assignment-specific code.
 Consider the components of the simulation handout:
 \begin{itemize}
-\item \texttt{runTrial} method which takes a list of strategies and simulates their behaviors, e.g.\ in a college admissions simulation
-\item data processing methods, e.g.\ \texttt{oneEachTrial}, which builds a list containing each configuration-specified strategy once,\footnote{see figure above} and \texttt{oneEachTrials} (not shown above), which runs \texttt{oneEachTrial} a large number of times and averages the results
-\item post-processing methods, e.g.\ outputting a CSV file containing student names and their average performance in the simulation
+\item
+  \texttt{runTrial} method which takes a list of strategies and simulates their behaviors, e.g.\ in a college admissions simulation
+\item
+  data processing methods, e.g.\ \texttt{oneEachTrial}, which builds a list containing each configuration-specified strategy once,\footnote{see figure above} and \texttt{oneEachTrials} (not shown above), which runs \texttt{oneEachTrial} a large number of times and averages the results
+\item
+  post-processing methods, e.g.\ outputting a CSV file containing student names and their average performance in the simulation
 \end{itemize}
 Only the first of these contains assignment-specific code.
 In order to implement replacement-comparison grading, I implemented the following methods:
 \begin{itemize}
-\item two new data processing methods: \texttt{withExtraTrial}, which builds a list containing each configuration-specified strategy once, and one extra strategy passed in as a parameter\footnote{see figure above}, and a corresponding method \texttt{withExtraTrials}, which averages the above. These are very similar to the existing data processing methods
-\item A new post-processing method that computes grades for each student given how many instructor strategies each student strategy outperformed and a lookup table to translate this win-count to an assignment grade. This method, \texttt{writeGrades}, is included as appendix \footnote{TODO: make into figure/appendix}
+\item
+  two new data processing methods: \texttt{withExtraTrial}, which builds a list containing each configuration-specified strategy once, and one extra strategy passed in as a parameter\footnote{see figure above}, and a corresponding method \texttt{withExtraTrials}, which averages the above.
+  These are very similar to the existing data processing methods
+\item
+  A new post-processing method that computes grades for each student given how many instructor strategies each student strategy outperformed and a lookup table to translate this win-count to an assignment grade.
+  This method, \texttt{writeGrades}, is included as appendix \footnote{TODO: make into figure/appendix}
 \end{itemize}
 \begin{minted}{java}
     public static void writeGrades () {
@@ -368,15 +390,8 @@ Given only these two changes, the handout code has been transformed into an auto
 Additionally, neither of these changes required alteration of the \texttt{runTrial} method, so minimal additional work is necessary for grading an assignment once the handout has been made.
 Only filling in the instructor strategy names and scoring rubric is needed.
 
-In summary, each assignment consists of a strategy interface, implementations of that strategy, a list of those implementations, a \texttt{runTrial} method which specifies how to evaluate those strategies, methods which run specific subsets of strategies, methods that post-process the results of those trials to provide low-latency feedback or for auto-grading, and automating these steps with a Makefile to configure, compile, and run the assignment simulation.
-\footnote{TODO redraw using Powerpoint}
+In summary, each assignment consists of a strategy interface, implementations of that strategy, a list of those implementations, a \texttt{runTrial} method which specifies how to evaluate those strategies, methods which run specific subsets of strategies, methods that post-process the results of those trials to provide low-latency feedback or for auto-grading, and automating these steps with a Makefile to configure, compile, and run the assignment simulation.\footnote{add ref to above diagram here}
 \footnote{TODO add formatBase.py config csv}
-\footnote{TODO use this diagram when I talk about modularization earlier}
-\begin{figure}[hbt]
-\centering
-\includegraphics[width=0.75\linewidth]{Handwritten_Diagram.jpg}
-\caption{TODO: This is a gray image.}\label{fig:gray}
-\end{figure}
 
 In addition to easily altering an assignment handout into an auto-grader, my framework also makes it easy to build new assignments.
 To adapt the college admissions exercise described above into the elections simulation of the second problem set of COS 445 this spring, only a few changes were necessary.
@@ -399,8 +414,7 @@ While these changes are minimal and necessary, keeping details of grading separa
 Thus far, I have illustrated the strengths of my project at performing tasks which were envisioned from the outset.
 The strength of modular implementation also comes from the ability to adapt to changing demands easily in real time.
 In this way, I was able to extend my framework throughout the semester in order to address my needs as a course assistant to remedy issues with the strategy design exercises.
-As shown below,\footnote{results section ref here} the handout code enabled students to verify that their code compiled and ran.
-However, several students submitted non-functioning strategies due to environmental differences, demonstrating the classic issue ``Works On My Machine''.
+While the handout code enabled students to verify that their code compiled and ran on their own personal computers, several students submitted non-functioning strategies due to environmental differences, demonstrating the classic issue ``Works On My Machine''.
 
 Other computer science courses at Princeton employ an online tool in the CS DropBox called ``Check Submit''.
 This tool allows instructors to specify tests to be run on department-configured machines using student code, and enables students to evaluate the performance of their submission against these tests without the concern that the software environment on their machine might not be compatible.
@@ -429,38 +443,39 @@ This project has already achieved minimum viable product by providing a framewor
 These assignments and the framework I developed are documented and available at the course GitHub site.\footnote{https://github.com/PrincetonUniversity/cos445-hw/tree/s18 requires invite}
 Thus, they will be available for reuse in future offerings of the course.
 
-As the goals of a project naturally define evaluation criteria, I have evaluated my project on the basis of each those goals: decreasing the work to build each assignment within a semester and the instructor time allocated to assignment implementation, eliminate the inter-year assignment reconstruction, improve available student resources, and in doing so improve student and instructor satisfaction.
+While I have been unable to experimentally determine whether my project will be reused, I have evaluated my successful achievement of each other goal.
+I have decreased the work to build each assignment within a semester and the instructor time allocated to assignment implementation, eliminated the inter-year assignment reconstruction, and improved available student resources
+These achievements have increased student and instructor satisfaction with the strategy design exercises.
 
+My primary goal, which unifies my work and sets it apart from past work on this subject, has been to discover modularity and decrease assignment to assignment rewriting.
 \begin{itemize}
-\item discover modularity and decrease assignment to assignment rewriting
-  \begin{itemize}
-  \item code rewriting measurements
-  \item instructor time usage
-  \end{itemize}
-\item improve student resources
-  \begin{itemize}
-  \item list resources created
-  \item polling data about student usage
-  \item empirical results about student error rates
-    ``Illegal submissions'' constitute student strategies which do not compile, throw exceptions, violate assertions, or otherwise behave outside of the parameters of the simulation.\footnote{Poorly performing strategies which obey the specification are legal.}
-    The illegal submission rate measures the percentage of students who were unable to develop a quality strategy for reasons other than lack of mastery of the course content.
-  \end{itemize}
-\item create institutional memory and decrease year-to-year rewriting
-  \begin{itemize}
-  \item cant measure until next year, but set up for it
-  \end{itemize}
-\item increase student and instructor satisfaction
-  \begin{itemize}
-  \item polling data about student usage
-  \end{itemize}
+\item code rewriting measurements between assignments
+\item instructor time usage
+\item extensibility:
 \end{itemize}
 
-%Thus, quantitative metrics, including software failure rates and instructor time usage, and qualitative metrics, including student and instructor satisfaction, both illustrate the improvements to the course and emphasize the importance of quality tooling to quality programming-based assignments.
+I have also succeeded at leveraging the extensibility of my project to improve student resources.
 
-%What are your thoughts on how well the strategy design exercises have gone this year? Specifically, I'm interested in your satisfaction with the implementations and software, and the amount of instructor time and frustration spent. (And less intersted in comments on the course policy decisions that may have impacted how well they went, sicne that's not in the scope of my independent work.)
-%** significantly** improved instructor involvement.
+\begin{itemize}
+\item list resources created
+\item polling data about student usage
+\item empirical results about student error rates
+  ``Illegal submissions'' constitute student strategies which do not compile, throw exceptions, violate assertions, or otherwise behave outside of the parameters of the simulation.\footnote{Poorly performing strategies which obey the specification are legal.}
+  The illegal submission rate measures the percentage of students who were unable to develop a quality strategy for reasons other than lack of mastery of the course content.
+\end{itemize}
 
-%I didn't actually touch any of the software directly, so I don't know how to comment on that. But I felt like the challenges mostly ran themselves. We talked briefly to set it up. We talked briefly to decide how to grade, and I didn't have to answer any technical questions for students in between
+Through this work, I have improved student and instructor experiences.
+In addition to the data gathered above, I verified this achievement by surveying the current students of COS 445 under the supervision of Professor Weinberg.
+\begin{itemize}
+\item polling data about student usage
+\end{itemize}
+
+% Thus, quantitative metrics, including software failure rates and instructor time usage, and qualitative metrics, including student and instructor satisfaction, both illustrate the improvements to the course and emphasize the importance of quality tooling to quality programming-based assignments.
+
+% What are your thoughts on how well the strategy design exercises have gone this year? Specifically, I'm interested in your satisfaction with the implementations and software, and the amount of instructor time and frustration spent. (And less intersted in comments on the course policy decisions that may have impacted how well they went, sicne that's not in the scope of my independent work.)
+
+% ** significantly** improved instructor involvement.
+% I didn't actually touch any of the software directly, so I don't know how to comment on that. But I felt like the challenges mostly ran themselves. We talked briefly to set it up. We talked briefly to decide how to grade, and I didn't have to answer any technical questions for students in between
 
 \section*{Conclusions and Future Work}
 Through this work, my goal has been to improve the quality of present and future computer science theory education, from the perspectives of both the students and faculty associated with COS 445.
