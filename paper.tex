@@ -464,7 +464,7 @@ I have decreased the work to build each assignment within a semester and the ins
 These achievements have increased student and instructor satisfaction with the strategy design exercises.
 
 My primary goal, which unifies my work and sets it apart from past work on this subject, has been to discover modularity and decrease assignment-to-assignment rewriting.
-As measured using \texttt{cloc}, development of the fourth strategy design exercise required only TODO\% of the code be modified from previous assignments~\cite{s18}.\footnote{TODO lines of code be changed out of TODO lines of code total assigned or graded.}
+As measured using \texttt{cloc}, development of the fourth strategy design exercise required only 33\% of the code be modified from previous assignments~\cite{s18}.\footnote{69 lines of code were changed out of 208 lines of code total in the development of the auctions assignment. This data also demonstrates how the assignment handouts are fairly succinct.}
 As illustrated in Figure~\ref{fig:instructortime}, which shows each assignment from Spring 2018 in chronological order, instructor time usage dropped radically with each exercise, demonstrating the benefits of modular design.\footnote{This data is exaggerated by the overhead of modularization and includes time spent on framework development where that was a direct dependency of instructor work.}
 
 \begin{figure}[hbt]
@@ -483,17 +483,42 @@ As shown in Figure~\ref{fig:illegal}, the illegal submission rate dropped from o
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.75\linewidth]{illegal.png}
-  \caption{Illegal submission rate dropped as my extensions were deployed. (Table~\ref{table:illegal})}\label{fig:illegal}
+  \caption{Illegal submission rate dropped as my extensions were deployed (Table~\ref{table:illegal}).}\label{fig:illegal}
 \end{figure}
 
 Student polling data gathered at multiple points during the semester confirms that student engagement with newly released tools coincided with decreased rates of illegal submissions.
 After the first two strategy design exercises, during which only the handout was provided, 68 of 74 respondents (out of 142 enrolled students) reported having used the handout to test their strategies~\cite{survey12}.
-TODO student usage 34
+At the end of the course, students were asked to give feedback on changes in strategy design write-up grading.
+As a part of that survey, students were asked: which of the resources developed as a part of this work they used in the process of developing their strategies?
+Of the 142 enrolled students, there were 31 survey respondents, and 29 of the survey respondents used some of the provided infrastructure.
+As shown in Figure~\ref{fig:usage2}, most students made usage of some of the additional resources.
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.75\linewidth]{usage2.png}
+  \caption{Students used the additional resources provided with Ultimatum and Auction~\cite{survey34}.}\label{fig:usage2}
+\end{figure}
+Individual responses show an even higher rate of usage than this data suggests: 24 of the 31 respondents used either the ``Check Submit'' button or the leaderboard to test a strategy.
 
-Through this work, I have improved student and instructor experiences.
-In addition to the data gathered above, I verified this achievement by surveying the current students of COS 445 under the supervision of Professor Weinberg.
+Through the development of these tools, I have improved student and instructor experiences.
+I verified this achievement by surveying the current students of COS 445 under the supervision of Professor Weinberg.
 In addition to usage data referenced above, survey respondents also evaluated their subjective rating for how useful the provided framework was in the design of their strategies.
-TODO student rating 12 34
+Initial responses shown in Figure~\ref{fig:useful1} to the fully functioning simulation software developed using my framework were positive.
+This ``testing infrastructure'' was provided in the handout for the first two software design exercises.
+As noted previously, even this handout provided more advanced functionality than had been available to students in previous offerings of COS 445.
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.75\linewidth]{useful1.png}
+  \caption{Students found the handout provided with Matchings and Elections useful~\cite{survey12}.}\label{fig:useful1}
+\end{figure}
+
+After the deployment of the ``Check Submit'' button and leaderboard, students had access to three different evaluation criteria for their strategies.
+Figure~\ref{fig:useful2} demonstrates that students later in the semester positively evaluated all three tools, and that students had become more supportive over time of the ability to test many different strategies on their own computers.
+This suggests an alternate interpretation of the decrease in illegal submissions: not just is it important to provide quality tooling to students, but also it is important for the students to use those tools.
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[width=0.75\linewidth]{useful2.png}
+  \caption{Students found the additional resources provided with Ultimatum and Auction useful~\cite{survey34}.}\label{fig:useful2}
+\end{figure}
 
 In order to evaluate instructor experiences, I reached out to Professor Weinberg for comment:
 \begin{displayquote}
