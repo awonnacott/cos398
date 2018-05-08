@@ -465,12 +465,12 @@ These achievements have increased student and instructor satisfaction with the s
 
 My primary goal, which unifies my work and sets it apart from past work on this subject, has been to discover modularity and decrease assignment-to-assignment rewriting.
 As measured using \texttt{cloc}, development of the fourth strategy design exercise required only 33\% of the code be modified from previous assignments~\cite{s18}.\footnote{69 lines of code were changed out of 208 lines of code total in the development of the auctions assignment. This data also demonstrates how the assignment handouts are fairly succinct.}
-As illustrated in Figure~\ref{fig:instructortime}, which shows each assignment from Spring 2018 in chronological order, instructor time usage dropped radically with each exercise, demonstrating the benefits of modular design.\footnote{This data is exaggerated by the overhead of modularization and includes time spent on framework development where that was a direct dependency of instructor work.}
-
+As illustrated in Figure~\ref{fig:instructortime}, which shows each assignment from Spring 2018 in chronological order, instructor time spent building and grading assignments dropped radically with each exercise, demonstrating the benefits of modular design.\footnote{This data is exaggerated by the overhead of modularization and includes time spent on framework development where that was a direct dependency of instructor work.}
+Improving the efficiency of the assignment design process was not within the scope of this work.
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.75\linewidth]{instructortime.png}
-  \caption{Instructor time usage dropped radically as my framework was deployed. (Table~\ref{table:time})}\label{fig:instructortime}
+  \caption{Instructor time usage dropped radically as my framework was deployed (Table~\ref{table:time}).}\label{fig:instructortime}
 \end{figure}
 
 I have also succeeded at leveraging the extensibility of my project to improve student resources.
@@ -487,15 +487,17 @@ As shown in Figure~\ref{fig:illegal}, the illegal submission rate dropped from o
 \end{figure}
 
 Student polling data gathered at multiple points during the semester confirms that student engagement with newly released tools coincided with decreased rates of illegal submissions.
-After the first two strategy design exercises, during which only the handout was provided, 68 of 74 respondents (out of 142 enrolled students) reported having used the handout to test their strategies~\cite{survey12}.
+The first poll was taken after the first two strategy design exercises, during which only the handout was provided.
+Out of 142 enrolled students, there were 74 survey responses, of which 68 reported having used the handout to test their strategies~\cite{survey12}.
 At the end of the course, students were asked to give feedback on changes in strategy design write-up grading.
-As a part of that survey, students were asked: which of the resources developed as a part of this work they used in the process of developing their strategies?
-Of the 142 enrolled students, there were 31 survey respondents, and 29 of the survey respondents used some of the provided infrastructure.
+As a part of that survey, students were asked which of the resources developed as a part of this work they used in the process of developing their strategies.
+There were 31 responses to the second survey and 29 of these reported use of some of the provided infrastructure.
 As shown in Figure~\ref{fig:usage2}, most students made usage of some of the additional resources.
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.75\linewidth]{usage2.png}
   \caption{Students used the additional resources provided with Ultimatum and Auction~\cite{survey34}.}\label{fig:usage2}
+  \caption*{Percentages include only students who reported using any provided resource.}
 \end{figure}
 Individual responses show an even higher rate of usage than this data suggests: 24 of the 31 respondents used either the ``Check Submit'' button or the leaderboard to test a strategy.
 
@@ -509,11 +511,12 @@ As noted previously, even this handout provided more advanced functionality than
   \centering
   \includegraphics[width=0.75\linewidth]{useful1.png}
   \caption{Students found the handout provided with Matchings and Elections useful~\cite{survey12}.}\label{fig:useful1}
+  \caption*{Scores were given from 1 (not useful) to 5 (useful).}
 \end{figure}
 
 After the deployment of the ``Check Submit'' button and leaderboard, students had access to three different evaluation criteria for their strategies.
 Figure~\ref{fig:useful2} demonstrates that students later in the semester positively evaluated all three tools, and that students had become more supportive over time of the ability to test many different strategies on their own computers.
-This suggests an alternate interpretation of the decrease in illegal submissions: not just is it important to provide quality tooling to students, but also it is important for the students to use those tools.
+This suggests an alternate interpretation of the decrease in illegal submissions: it is not just important to provide quality tooling to students, but also important that the students use those tools.
 \begin{figure}[hbt]
   \centering
   \includegraphics[width=0.75\linewidth]{useful2.png}
@@ -524,9 +527,13 @@ In order to evaluate instructor experiences, I reached out to Professor Weinberg
 \begin{displayquote}
 Andrew: What are your thoughts on how well the strategy design exercises have gone this year? Specifically, I'm interested in your satisfaction with the implementations and software, and the amount of instructor time and frustration spent.
 
-Professor Weinberg: We have \textbf{significantly} improved instructor involvement. I didn't actually touch any of the software directly, so I don't know how to comment on that. But I felt like the challenges mostly ran themselves. We talked briefly to set it up. We talked briefly to decide how to grade, and I didn't have to answer any technical questions for students in between.
+Professor Weinberg: We have \textbf{significantly} improved instructor involvement.
+I didn't actually touch any of the software directly, so I don't know how to comment on that.
+But I felt like the challenges mostly ran themselves.
+We talked briefly to set it up.
+We talked briefly to decide how to grade, and I didn't have to answer any technical questions for students in between.
 \end{displayquote}
-My own experience an undergraduate course assistant using the framework I have developed in this work corroborates this claim: this project has led to better course experiences for all involved.
+My own experience an undergraduate course assistant using the framework I have developed in this work corroborates the claim that this project has led to better course experiences for all involved.
 
 \section*{Conclusions and Future Work}
 Through this work, my goal has been to improve the quality of present and future computer science theory education, from the perspectives of both the students and faculty associated with COS 445.
